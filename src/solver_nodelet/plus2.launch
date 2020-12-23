@@ -1,0 +1,13 @@
+<?xml version="1.0"?>
+<launch>
+
+  <node pkg="nodelet" type="nodelet" name="vehicle_model_1" args="load solver_nodelet/vehicle_model standalone_nodelet" output="screen">
+
+  </node>
+
+  <node pkg="nodelet" type="nodelet" name="vehicle_model_2" args="load solver_nodelet/vehicle_model standalone_nodelet" output="screen">
+
+  </node>
+
+</launch>
+

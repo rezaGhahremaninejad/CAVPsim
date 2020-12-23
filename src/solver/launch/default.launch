@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<launch>
+
+  <include file="$(env HOME)/reza_ws/src/vehicle_model/launch/two_vehicle.launch"/>
+
+  <node pkg="solver" type="solver" name="solver" output="screen">
+    <param name="initial_seed_size" value='100' />
+    <param name="predicted_final_step" value='150' />
+    <param name="threshold" value='2' />
+    <param name="solver_time_step" value='0.1' />
+    <param name="max_step" value='150' />
+    <param name="u1_min" value='-100' />
+    <param name="u2_min" value='-100' />
+    <param name="u1_max" value='170' />
+    <param name="u2_max" value='170' />
+    <param name="w1_min" value='-3.14' />
+    <param name="w2_min" value='-3.14' />
+    <param name="w1_max" value='3.14' />
+    <param name="w2_max" value='3.14' />
+
+    <param name="x1_1_init" value='0' />
+    <param name="x1_2_init" value='0' />
+    <param name="x1_3_init" value='0' />
+    <param name="x1_4_init" value='0' />
+    <param name="x1_5_init" value='0' />
+    <param name="x1_6_init" value='0' />
+    <param name="x1_7_init" value='0' />
+
+    <param name="x2_1_init" value='400' />
+    <param name="x2_2_init" value='100' />
+    <param name="x2_3_init" value='0' />
+    <param name="x2_4_init" value='0' />
+    <param name="x2_5_init" value='0' />
+    <param name="x2_6_init" value='0' />
+    <param name="x2_7_init" value='0' />
+
+    <param name="x1_1_final" value='300' />
+    <param name="x1_2_final" value='-100' />
+    <param name="x1_3_final" value='0' />
+    <param name="x1_4_final" value='0' />
+    <param name="x1_5_final" value='0' />
+    <param name="x1_6_final" value='0' />
+    <param name="x1_7_final" value='0' />
+
+    <param name="x2_1_final" value='0'/>
+    <param name="x2_2_final" value='0' />
+    <param name="x2_3_final" value='0' />
+    <param name="x2_4_final" value='0' />
+    <param name="x2_5_final" value='0' />
+    <param name="x2_6_final" value='0' />
+    <param name="x2_7_final" value='0' />
+
+  </node>
+
+</launch>

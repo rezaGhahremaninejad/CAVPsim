@@ -1,0 +1,9 @@
+build/
+install/
+log/
+logs/
+devel/
+.vscode/
+**/.vscode/*
+.catkin_tools/
+*.pyc

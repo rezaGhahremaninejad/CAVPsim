@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<launch>
+
+  <node pkg="communication_model" type="backbone_model" name="backbone_model" ns="com1" output="screen">
+    <param name="BAND_WIDTH" value='6.0'/>
+    <param name="MESSAGE_RATE" value='0.1'/>
+    <remap from="output_tx" to="output"/>
+    <remap from="output_rx" to="output"/>
+    <remap from="input_tx" to="vehicle1/input_tx"/>
+    <remap from="input_rx" to="vehicle1/input_rx"/>
+  </node>
+
+</launch>

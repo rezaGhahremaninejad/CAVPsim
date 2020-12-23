@@ -1,0 +1,13 @@
+<library path="lib/libsolver_nodelet">
+  <class name="solver_nodelet/solver_1" type="solver_nodelet::solver_1" base_class_type="nodelet::Nodelet">
+    <description> 
+      A node to add a value and republish.
+    </description>
+  </class>
+
+  <class name="solver_nodelet/vehicle_model" type="solver_nodelet::vehicle_model" base_class_type="nodelet::Nodelet">
+    <description> 
+      A node to add a value and republish.
+    </description>
+  </class>
+</library>

@@ -1,0 +1,32 @@
+<package>
+  <name>solver_nodelet</name>
+  <version>0.1.11</version>
+  <description>solver_nodelet</description>
+  <maintainer email="d.stonier@gmail.com">Daniel Stonier</maintainer>
+  <author>Tully Foote</author>
+  <license>BSD</license>
+
+  <buildtool_depend>catkin</buildtool_depend>
+
+  <build_depend>nodelet</build_depend>
+  <build_depend>tf</build_depend>
+  <build_depend>roscpp</build_depend>
+  <build_depend>std_msgs</build_depend>
+  <build_depend>solver_msgs</build_depend>
+  <build_depend>model_msgs</build_depend>
+  <build_depend>communication_msgs</build_depend>
+
+  <run_depend>nodelet</run_depend>
+  <run_depend>tf</run_depend>
+  <run_depend>roscpp</run_depend>
+  <run_depend>std_msgs</run_depend>
+  <run_depend>solver_msgs</run_depend>
+  <run_depend>model_msgs</run_depend>
+  <run_depend>communication_msgs</run_depend>
+
+  <export>
+    <nodelet plugin="${prefix}/solver_nodelet.xml"/>
+  </export>
+</package>
+
+

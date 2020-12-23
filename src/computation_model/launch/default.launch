@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<launch>
+
+  <node pkg="computation_model" type="compute_model" name="compute_model" ns="comp1" output="screen">
+    <param name="batch_size" value='1000' />
+    <param name="t_op" value='0.01' />
+    <param name="app_flo" value='1000' />
+
+    <remap from="status" to="status"/>
+
+  </node>
+
+</launch>

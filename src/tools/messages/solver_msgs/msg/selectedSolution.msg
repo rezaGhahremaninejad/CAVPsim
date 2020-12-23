@@ -1,0 +1,10 @@
+std_msgs/Header header
+model_msgs/VehicleStates vehicle1_states
+model_msgs/VehicleStates vehicle2_states
+model_msgs/VehicleControlSignals vehicle1_control_signals
+model_msgs/VehicleControlSignals vehicle2_control_signals
+float64[] vehicle1_fuel_cost
+float64[] vehicle2_fuel_cost
+float64[] vehicle1_navigation_cost
+float64[] vehicle2_navigation_cost
+float64[] collision_risk

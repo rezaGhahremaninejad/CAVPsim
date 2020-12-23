@@ -1,0 +1,3 @@
+int64 solution_step
+solutionHolder vehicle1_solution
+solutionHolder vehicle2_solution

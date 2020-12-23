@@ -1,0 +1,10 @@
+<?xml version="1.0"?>
+<launch>
+
+  <node pkg="nodelet" type="nodelet" name="solver_1" args="load solver_nodelet/solver_1 standalone_nodelet" output="screen">
+    <remap from="/solver_1/vehicle_model_1/output" to="/vehicle_model_1/output"/>
+    <remap from="/solver_1/vehicle_model_2/output" to="/vehicle_model_2/output"/>
+  </node>		  
+
+</launch>
+

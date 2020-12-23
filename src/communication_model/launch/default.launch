@@ -1,0 +1,10 @@
+<?xml version="1.0"?>
+<launch>
+  <param name="/use_sim_time" value="true"/>
+  <node pkg="nodelet" type="nodelet" name="its_manager"  args="manager" output="screen"/>
+  <node pkg="nodelet" type="nodelet" name="itsg5_bristol" args="load communication_model/itsg5_bristol its_manager" output="screen">
+      <!-- <remap from="atak/received_messages" to="vehicle/received_messages"/> -->
+  </node>
+  <rosparam param="itsg5_bristol" file="$(find communication_model)/communication_model.yaml"/>
+
+</launch>

@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<launch>
+
+  <node pkg="vehicle_model" type="model" name="model" ns="vehicle1" output="screen">
+    <param name="L" value='2.7' />
+    <param name="m" value='1200' />
+    <param name="dt" value='0.001' />
+    <param name="R" value='0.19' />
+    <param name="I_d" value='0.3'/>
+    <param name="I_g" value='0.3' />
+    <param name="Im_e" value='0.3' />
+    <param name="Im_t" value='0.3' /> 
+    <param name="Im_w" value='0.3' /> 
+
+    <remap from="output" to="output"/>
+    <remap from="input" to="input"/> -->
+  </node>
+
+  <!--<node pkg="vehicle_model" type="model" name="model" ns="vehicle2" output="screen">
+    <param name="L" value='1.2' />
+    <param name="m" value='600' />
+    <param name="dt" value='0.01' />
+    <param name="R" value='0.3' />
+    <param name="I_d" value='0.3'/>
+    <param name="I_g" value='0.3' />
+
+    <remap from="output" to="output"/>
+    <remap from="input" to="input"/>
+  </node>
+-->
+
+</launch>

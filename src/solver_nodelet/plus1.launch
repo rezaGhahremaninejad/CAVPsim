@@ -1,0 +1,22 @@
+<?xml version="1.0"?>
+<launch>
+  <node pkg="nodelet" type="nodelet" name="standalone_nodelet"  args="manager" output="screen"/>
+  <!--<node pkg="nodelet" type="nodelet" name="vehicle_model_1" args="load solver_nodelet/vehicle_model standalone_nodelet" output="screen">
+
+  </node>-->
+
+  <!--<node pkg="nodelet" type="nodelet" name="vehicle_model_2" args="load solver_nodelet/vehicle_model standalone_nodelet" output="screen">
+
+  </node>-->
+  <!--<node pkg="nodelet" type="nodelet" name="solver_1" args="load solver_nodelet/solver_1 standalone_nodelet" output="screen">
+    <remap from="/solver_1/vehicle_model_1/output" to="/vehicle_model_1/output"/>
+    <remap from="/solver_1/vehicle_model_2/output" to="/vehicle_model_2/output"/>
+  </node>-->		  
+  
+
+  <!--<rosparam param="Plus2" file="$(find solver_nodelet)/plus_default.yaml"/>-->
+
+
+
+</launch>
+
