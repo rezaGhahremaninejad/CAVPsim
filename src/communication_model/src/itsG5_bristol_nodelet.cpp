@@ -21,7 +21,7 @@ namespace communication_model
     class itsg5_bristol : public nodelet::Nodelet
     {
     public:
-        itsg5_bristol() : BAND_WIDTH(6), MESSAGE_RATE(0.03), PROC_DELAY_MEAN_SEC(0.2), PROC_DELAY_DEV_SEC(0.02), idx(0) {}
+        itsg5_bristol() : BAND_WIDTH(6), MESSAGE_RATE(0.03), PROC_DELAY_MEAN_SEC(0.12), PROC_DELAY_DEV_SEC(0.02), idx(0) {}
         ~itsg5_bristol() {}
 
         // ros::CallbackQueue &callback_queue = getMTCallbackQueue();
@@ -88,7 +88,7 @@ namespace communication_model
             float PROC_DELAY_SEC = args->PROC_DELAY_MEAN_SEC +
                                    (2 * args->PROC_DELAY_DEV_SEC * (static_cast<float>(rand()) / static_cast<float>(RAND_MAX))) -
                                    args->PROC_DELAY_DEV_SEC;
-            ros::Duration tr_rate(PROC_DELAY_SEC);
+            //ros::Duration tr_rate(PROC_DELAY_SEC);
             ROS_INFO("----------------------------PROC_DELAY_SEC: %f", PROC_DELAY_SEC);
 
             _v01_Rx_sim.RxMAC = "4c:5e:0c:84:35:f6";
@@ -119,7 +119,8 @@ namespace communication_model
                 ros::Duration(PROC_DELAY_SEC).sleep();
 
                 _v01_Rx_sim.header = args->msg.header;
-                _v01_Rx_sim.header.stamp = args->msg.header.stamp - tr_rate;
+                // _v01_Rx_sim.header.stamp = args->msg.header.stamp;
+                _v01_Rx_sim.header.stamp = args->msg.header.stamp - ros::Duration(PROC_DELAY_SEC);
                 // _v01_Rx_sim.header.stamp.secs = _v01_Rx_sim.header.stamp.secs + int(tr_rate.toSec());
                 // _v01_Rx_sim.header.stamp.nsecs = _v01_Rx_sim.header.stamp.nsecs + int(tr_rate.toNSec());
                 // _v01_Rx_sim.header.stamp.nsec += noise;
