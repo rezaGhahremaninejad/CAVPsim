@@ -1,24 +1,61 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <launch>
 
-  <node pkg="vehicle_model" type="dummy_control" name="dummy_control" ns="control1" output="screen">
+  <node pkg="vehicle_model" type="dummy_control" name="dummy_control" ns="controllerA" output="screen">
     <param name="dt" value='0.001' />
-    <remap from="output" to="/com1/vehicle1/input_rx"/>
-    <remap from="output" to="/vehicle1/input"/>
+    <remap from="output" to="/comA/vehicleA/input_rx"/>
+    <remap from="output" to="/vehicleA/input"/>
     <remap from="input" to="input"/>
+
+    <param name="T_1" value='10' />
+    <param name="T_2" value='12' />
+    <param name="T_3" value='15' />
+    <param name="T_4" value='18' />
+    <param name="T_5" value='19' />
+    <param name="T_6" value='22' />
+    <param name="T_1_U" value='22' />
+    <param name="T_1_W" value='22' />
+    <param name="T_2_U" value='22' />
+    <param name="T_2_W" value='22' />
+    <param name="T_3_U" value='22' />
+    <param name="T_3_W" value='22' />
+    <param name="T_4_U" value='22' />
+    <param name="T_4_W" value='22' />
+    <param name="T_5_U" value='22' />
+    <param name="T_5_W" value='22' />
+    <param name="INITIAL_U" value='22' />
+    <param name="INITIAL_W" value='22' />
+    <param name="FINAL_U" value='22' />
+    <param name="FINAL_W" value='22' />
+
   </node>
 
-  <!--<node pkg="vehicle_model" type="model" name="model" ns="vehicle2" output="screen">
-    <param name="L" value='1.2' />
-    <param name="m" value='600' />
-    <param name="dt" value='0.01' />
-    <param name="R" value='0.3' />
-    <param name="I_d" value='0.3'/>
-    <param name="I_g" value='0.3' />
-
-    <remap from="output" to="output"/>
+  <node pkg="vehicle_model" type="dummy_control" name="dummy_control" ns="controllerB" output="screen">
+    <param name="dt" value='0.001' />
+    <remap from="output" to="/comB/vehicleB/input_rx"/>
+    <remap from="output" to="/vehicleB/input"/>
     <remap from="input" to="input"/>
+
+    <param name="T_1" value='10' />
+    <param name="T_2" value='12' />
+    <param name="T_3" value='15' />
+    <param name="T_4" value='18' />
+    <param name="T_5" value='19' />
+    <param name="T_6" value='22' />
+    <param name="T_1_U" value='22' />
+    <param name="T_1_W" value='22' />
+    <param name="T_2_U" value='22' />
+    <param name="T_2_W" value='22' />
+    <param name="T_3_U" value='22' />
+    <param name="T_3_W" value='22' />
+    <param name="T_4_U" value='22' />
+    <param name="T_4_W" value='22' />
+    <param name="T_5_U" value='22' />
+    <param name="T_5_W" value='22' />
+    <param name="INITIAL_U" value='22' />
+    <param name="INITIAL_W" value='22' />
+    <param name="FINAL_U" value='22' />
+    <param name="FINAL_W" value='22' />
   </node>
--->
 
 </launch>

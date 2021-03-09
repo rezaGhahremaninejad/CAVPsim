@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <launch>
 
-  <node pkg="vehicle_model" type="model" name="model" ns="vehicle1" output="screen">
+  <node pkg="vehicle_model" type="model" name="model" ns="vehicleA" output="screen">
     <param name="L" value='2.7' />
     <param name="m" value='1200' />
     <param name="dt" value='0.001' />
@@ -11,12 +11,16 @@
     <param name="Im_e" value='0.3' />
     <param name="Im_t" value='0.3' /> 
     <param name="Im_w" value='0.3' /> 
+    <param name="initial_x" value='0.3' /> 
+    <param name="initial_y" value='0.3' /> 
+    <param name="initial_heading" value='0.3' /> <!--RAD-->
+    <param name="initial_speed" value='0.3' /> 
 
     <remap from="output" to="output"/>
     <remap from="input" to="input"/> -->
   </node>
 
-  <node pkg="vehicle_model" type="model" name="model" ns="vehicle2" output="screen">
+  <node pkg="vehicle_model" type="model" name="model" ns="vehicleB" output="screen">
     <param name="L" value='2.7' />
     <param name="m" value='1200' />
     <param name="dt" value='0.001' />
@@ -26,6 +30,10 @@
     <param name="Im_e" value='0.3' />
     <param name="Im_t" value='0.3' /> 
     <param name="Im_w" value='0.3' /> 
+    <param name="initial_x" value='0.3' /> 
+    <param name="initial_y" value='0.3' /> 
+    <param name="initial_heading" value='0.3' /> 
+    <param name="initial_speed" value='0.3' /> 
 
     <remap from="output" to="output"/>
     <remap from="input" to="input"/> -->
