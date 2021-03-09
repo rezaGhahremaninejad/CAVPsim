@@ -61,6 +61,10 @@ int main(int argc, char **argv)
     n.param<float>("solver_time_step", solver_time_step, 0.1); // wheel rotation momentume
     n.param<bool>("solver_req", solver_req, true);           // wheel rotation momentume
     n.param<float>("ideal_fuel_cost", ideal_fuel_cost, 0.01);           // wheel rotation momentume
+    n.param<float>("initial_x", x_1, 0.01);           // wheel rotation momentume
+    n.param<float>("initial_y", x_2, 0.01);           // wheel rotation momentume
+    n.param<float>("initial_heading", x_3, 0.01);           // wheel rotation momentume
+    n.param<float>("initial_speed", x_4, 0.01);           // wheel rotation momentume
 
     //n.param<float>("GR", GR, 0.3);
     GR = I_d * I_g;
