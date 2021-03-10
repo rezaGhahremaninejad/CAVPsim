@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 2.8.3)
-project(model_msgs)
+project(vehicle_model_msgs)
 
 find_package(catkin REQUIRED COMPONENTS
   message_generation
@@ -13,8 +13,8 @@ add_message_files(
   DIRECTORY msg
   FILES
   VehicleStates.msg
-  VehicleControlSignals.msg
   VehicleModelInput.msg
+  VehicleControlSignals.msg
   VehicleModelOutput.msg
 )
 

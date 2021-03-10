@@ -1,6 +1,6 @@
 #include "ros/ros.h"
-#include "model_msgs/VehicleModelInput.h"
-#include "model_msgs/VehicleModelOutput.h"
+#include "vehicle_model_msgs/VehicleModelInput.h"
+#include "vehicle_model_msgs/VehicleModelOutput.h"
 #include <cmath>
 
 float x_1, x_2, x_3, x_4, x_5, x_6;
@@ -15,7 +15,7 @@ float dt;
 
 using namespace std;
 
-void feedBackCallback(const model_msgs::VehicleModelOutput::ConstPtr &msg)
+void feedBackCallback(const vehicle_model_msgs::VehicleModelOutput::ConstPtr &msg)
 {
     the_seq = msg->header.seq;
     x_1 = msg->vehicle_states.x_1;
@@ -37,7 +37,7 @@ int main(int argc, char **argv)
     ros::NodeHandle n;
     n.param<float>("dt", dt, 0.00000025);
     
-    ros::Publisher output_pub = n.advertise<model_msgs::VehicleModelInput>("input", 1000);
+    ros::Publisher output_pub = n.advertise<vehicle_model_msgs::VehicleModelInput>("input", 1000);
     ros::Subscriber vehicle_feedback_sub = n.subscribe("ouput", 1000, feedBackCallback);
     n.param<float>("T_1", T_1, 0.01);           
     n.param<float>("T_2", T_2, 0.01);           
@@ -66,7 +66,7 @@ int main(int argc, char **argv)
     while (ros::ok())
     {
         ros::Time time_stamp = ros::Time::now();
-        model_msgs::VehicleModelInput vehicle_input;
+        vehicle_model_msgs::VehicleModelInput vehicle_input;
         vehicle_input.header.seq = the_seq;
         vehicle_input.header.stamp = time_stamp;
         vehicle_input.useThisStates = false;

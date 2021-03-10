@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <launch>
 
-  <node pkg="vehicle_model" type="model" name="model" output="screen">
+  <node pkg="vehicle_model" type="model" name="model" ns="vehicleA" output="screen">
     <param name="L" value='2.7' />
     <param name="m" value='1200' />
     <param name="dt" value='0.001' />
