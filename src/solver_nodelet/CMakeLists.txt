@@ -1,14 +1,14 @@
 cmake_minimum_required(VERSION 2.8.3)
 project(solver_nodelet)
 
-find_package(catkin REQUIRED COMPONENTS nodelet roscpp std_msgs solver_msgs model_msgs communication_msgs computation_msgs tf)
+find_package(catkin REQUIRED COMPONENTS nodelet roscpp std_msgs solver_msgs vehicle_model_msgs communication_msgs computation_msgs tf)
 
 ## Setup include directories
 include_directories(${catkin_INCLUDE_DIRS})
 
 catkin_package(
   LIBRARIES solver_nodelet
-  CATKIN_DEPENDS nodelet roscpp std_msgs solver_msgs model_msgs communication_msgs tf
+  CATKIN_DEPENDS nodelet roscpp std_msgs solver_msgs vehicle_model_msgs communication_msgs tf
 )
 
 ## Create the nodelet tutorial library

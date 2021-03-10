@@ -1,7 +1,7 @@
 #include "ros/ros.h"
-#include "model_msgs/VehicleModelInput.h"
-#include "model_msgs/VehicleModelOutput.h"
-#include "model_msgs/VehicleStates.h"
+#include "vehicle_model_msgs/VehicleModelInput.h"
+#include "vehicle_model_msgs/VehicleModelOutput.h"
+#include "vehicle_model_msgs/VehicleStates.h"
 #include "solver_msgs/solutionHolder.h"
 #include "solver_msgs/solutionHolderArr.h"
 #include "solver_msgs/finalSolutionArr.h"
@@ -160,7 +160,7 @@ void calcCollisionRisk()
     vehicle2_solutionsArr.solutions.back().collision_risk = 1/pow(x11 - x12, 2) + pow(x21 - x22, 2);
 }
 
-float calcNavigationCost(const model_msgs::VehicleStates s, float x1_final, float x2_final, float x3_final, float x4_final)
+float calcNavigationCost(const vehicle_model_msgs::VehicleStates s, float x1_final, float x2_final, float x3_final, float x4_final)
 {
     //ROS_INFO("###############################solution.navigation_cost: [%f]", pow(solution_step / (solution_step - predicted_final_step), 2));
     //return pow(solution_step / (solution_step - predicted_final_step), 2) * (pow(s.x_1 - x1_final, 2) + pow(s.x_2 - x2_final, 2) + pow(s.x_3 - x3_final, 2) + pow(s.x_4 - x4_final, 2));
@@ -168,7 +168,7 @@ float calcNavigationCost(const model_msgs::VehicleStates s, float x1_final, floa
     return (pow(s.x_1 - x1_final, 2) + pow(s.x_2 - x2_final, 2));
 }
 
-void vehicle1OutputCallback(const model_msgs::VehicleModelOutput msg)
+void vehicle1OutputCallback(const vehicle_model_msgs::VehicleModelOutput msg)
 {
     solver_msgs::solutionHolder solution;
     solution.header = msg.header;
@@ -184,7 +184,7 @@ void vehicle1OutputCallback(const model_msgs::VehicleModelOutput msg)
     //ROS_INFO("I heard: [%s]", msg->data.c_str());
 }
 
-void vehicle2OutputCallback(const model_msgs::VehicleModelOutput msg)
+void vehicle2OutputCallback(const vehicle_model_msgs::VehicleModelOutput msg)
 {
     solver_msgs::solutionHolder solution;
     solution.header = msg.header;
@@ -251,9 +251,9 @@ int main(int argc, char **argv)
     n.param<float>("x2_6_final", x2_6_final, 0);
     n.param<float>("x2_7_final", x2_7_final, 0);
 
-    ros::Publisher vehicle1_input_pub = n.advertise<model_msgs::VehicleModelInput>("/vehicle1/input", 1000);
+    ros::Publisher vehicle1_input_pub = n.advertise<vehicle_model_msgs::VehicleModelInput>("/vehicle1/input", 1000);
     ros::Publisher solution_pub = n.advertise<solver_msgs::finalSolutionArr>("solution", 1000);
-    ros::Publisher vehicle2_input_pub = n.advertise<model_msgs::VehicleModelInput>("/vehicle2/input", 1000);
+    ros::Publisher vehicle2_input_pub = n.advertise<vehicle_model_msgs::VehicleModelInput>("/vehicle2/input", 1000);
     ros::Subscriber vehicle1_output_sub = n.subscribe("vehicle1/output", 1000, vehicle1OutputCallback);
     ros::Subscriber vehicle2_output_sub = n.subscribe("vehicle2/output", 1000, vehicle2OutputCallback);
 
@@ -277,7 +277,7 @@ int main(int argc, char **argv)
             ros::Time time_stamp = ros::Time::now();
 
             //ROS_INFO("********************ve1 [%d]", initial_seed_size);
-            model_msgs::VehicleModelInput vehicle_input;
+            vehicle_model_msgs::VehicleModelInput vehicle_input;
             //the_seq = vehicel2_output_seq + 1;
             vehicle_input.header.seq = the_seq;
             vehicle_input.useThisStates = true;

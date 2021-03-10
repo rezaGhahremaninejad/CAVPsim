@@ -31,9 +31,9 @@
 #include <nodelet/nodelet.h>
 #include <ros/ros.h>
 #include <std_msgs/Float64.h>
-#include "model_msgs/VehicleModelInput.h"
-#include "model_msgs/VehicleModelOutput.h"
-#include "model_msgs/VehicleStates.h"
+#include "vehicle_model_msgs/VehicleModelInput.h"
+#include "vehicle_model_msgs/VehicleModelOutput.h"
+#include "vehicle_model_msgs/VehicleStates.h"
 #include "solver_msgs/solutionHolder.h"
 #include "solver_msgs/solutionHolderArr.h"
 #include "solver_msgs/finalSolutionArr.h"
@@ -247,7 +247,7 @@ namespace solver_nodelet
       //ROS_INFO("*******************seqs [%d], [%d]", vehicel1_output_seq, vehicel2_output_seq);
     }
 
-    float calcNavigationCost(const model_msgs::VehicleStates s, float x1_final, float x2_final, float x3_final, float x4_final)
+    float calcNavigationCost(const vehicle_model_msgs::VehicleStates s, float x1_final, float x2_final, float x3_final, float x4_final)
     {
       //ROS_INFO("###############################solution.navigation_cost: [%f]", pow(solution_step / (solution_step - predicted_final_step), 2));
       //return pow(solution_step / (solution_step - predicted_final_step), 2) * (pow(s.x_1 - x1_final, 2) + pow(s.x_2 - x2_final, 2) + pow(s.x_3 - x3_final, 2) + pow(s.x_4 - x4_final, 2));
@@ -256,7 +256,7 @@ namespace solver_nodelet
       return (pow(abs(s.x_1 - x1_final), 2) + pow(abs(s.x_2 - x2_final), 2));
     }
 
-    void vehicle1OutputCallback(const model_msgs::VehicleModelOutput msg)
+    void vehicle1OutputCallback(const vehicle_model_msgs::VehicleModelOutput msg)
     {
       if (!vehicle1_end)
       {
@@ -293,7 +293,7 @@ namespace solver_nodelet
       //ROS_INFO("I heard: [%s]", msg->data.c_str());
     }
 
-    void vehicle2OutputCallback(const model_msgs::VehicleModelOutput msg)
+    void vehicle2OutputCallback(const vehicle_model_msgs::VehicleModelOutput msg)
     {
       if (!vehicle2_end)
       {
@@ -381,9 +381,9 @@ namespace solver_nodelet
       private_nh.getParam("x2_6_final", x2_6_final);
       private_nh.getParam("x2_7_final", x2_7_final);
 
-      vehicle1_input_pub = private_nh.advertise<model_msgs::VehicleModelInput>("/vehicle_model_1/input", 1000);
+      vehicle1_input_pub = private_nh.advertise<vehicle_model_msgs::VehicleModelInput>("/vehicle_model_1/input", 1000);
       solution_pub = private_nh.advertise<solver_msgs::finalSolutionArr>("solution", 1000);
-      vehicle2_input_pub = private_nh.advertise<model_msgs::VehicleModelInput>("/vehicle_model_2/input", 1000);
+      vehicle2_input_pub = private_nh.advertise<vehicle_model_msgs::VehicleModelInput>("/vehicle_model_2/input", 1000);
       vehicle1_output_sub = private_nh.subscribe("vehicle_model_1/output", 1000, &solver_1::vehicle1OutputCallback, this);
       vehicle2_output_sub = private_nh.subscribe("vehicle_model_2/output", 1000, &solver_1::vehicle2OutputCallback, this);
 
@@ -422,7 +422,7 @@ namespace solver_nodelet
         if (!vehicle1_end)
         {
           //vehicel1_last_sent = false;
-          model_msgs::VehicleModelInput vehicle1_input;
+          vehicle_model_msgs::VehicleModelInput vehicle1_input;
           //the_seq = vehicel2_output_seq + 1;
           vehicle1_input.header.seq = the_seq;
           vehicle1_input.header.stamp = ros::Time::now();
@@ -446,7 +446,7 @@ namespace solver_nodelet
         if (!vehicle2_end)
         {
           //vehicel2_last_sent = false;
-          model_msgs::VehicleModelInput vehicle2_input;
+          vehicle_model_msgs::VehicleModelInput vehicle2_input;
           //the_seq = vehicel2_output_seq + 1;
           vehicle2_input.header.seq = the_seq;
           vehicle2_input.header.stamp = ros::Time::now();
@@ -562,7 +562,7 @@ namespace solver_nodelet
       B_4 = 1.7363 * (pow(10, -5)) / R;
       B_5 = 6.4277 * (pow(10, -8)) * I_d / pow(R, 2);
       B_6 = 1.6088 * (pow(10, -7)) / (R * I_d);
-      ouput_pub = private_nh.advertise<model_msgs::VehicleModelOutput>("output", 1000);
+      ouput_pub = private_nh.advertise<vehicle_model_msgs::VehicleModelOutput>("output", 1000);
       nav_pub = private_nh.advertise<nav_msgs::Odometry>("odometry", 1000);
       input_sub = private_nh.subscribe("input", 1000, &vehicle_model::inputCallback, this);
 
@@ -573,7 +573,7 @@ namespace solver_nodelet
       }
     }
 
-    void inputCallback(const model_msgs::VehicleModelInput::ConstPtr &msg)
+    void inputCallback(const vehicle_model_msgs::VehicleModelInput::ConstPtr &msg)
     {
       seq = msg->header.seq;
       if (msg->useThisStates)
@@ -598,7 +598,7 @@ namespace solver_nodelet
       odometry_msg.header.frame_id = "odom";
       odometry_msg.child_frame_id = "base_link";
 
-      model_msgs::VehicleModelOutput output;
+      vehicle_model_msgs::VehicleModelOutput output;
       output.header.seq = seq;
       ROS_INFO("######################## Received message sequence: [%d]", seq);
       output.header.stamp = odometry_msg.header.stamp;
