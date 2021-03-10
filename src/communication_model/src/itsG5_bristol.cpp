@@ -1,6 +1,6 @@
 #include "ros/ros.h"
-#include "model_msgs/VehicleModelInput.h"
-#include "model_msgs/VehicleModelOutput.h"
+#include "vehicle_model_msgs/VehicleModelInput.h"
+#include "vehicle_model_msgs/VehicleModelOutput.h"
 #include "geometry_msgs/Pose.h"
 #include "geometry_msgs/PoseStamped.h"
 #include <tf/transform_broadcaster.h>

@@ -11,7 +11,7 @@ find_package(catkin REQUIRED COMPONENTS
   roscpp
   rospy
   std_msgs
-  model_msgs
+  vehicle_model_msgs
   computation_msgs
   tf
 )

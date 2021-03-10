@@ -52,15 +52,15 @@
   <build_depend>roscpp</build_depend>
   <build_depend>nodelet</build_depend>
   <build_depend>rospy</build_depend>
-  <build_depend>model_msgs</build_depend>
+  <build_depend>vehicle_model_msgs</build_depend>
   <build_depend>communication_msgs</build_depend>
   <build_export_depend>roscpp</build_export_depend>
   <build_export_depend>rospy</build_export_depend>
-  <build_export_depend>model_msgs</build_export_depend>
+  <build_export_depend>vehicle_model_msgs</build_export_depend>
   <build_export_depend>communication_msgs</build_export_depend>
   <exec_depend>roscpp</exec_depend>
   <exec_depend>rospy</exec_depend>
-  <exec_depend>model_msgs</exec_depend>
+  <exec_depend>vehicle_model_msgs</exec_depend>
   <exec_depend>communication_msgs</exec_depend>
   <exec_depend>nodelet</exec_depend>
 
