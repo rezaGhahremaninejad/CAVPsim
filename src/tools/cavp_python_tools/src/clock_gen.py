@@ -2,7 +2,7 @@
 import numpy as np
 from scipy.io import loadmat
 import rospy
-from model_msgs.msg import VehicleModelOutput
+from vehicle_model_msgs.msg import VehicleModelOutput
 from communication_msgs.msg import status, BristolTx, BristolRx
 # from computation_msgs.msg import status
 from solver_msgs.msg import finalSolutionArr

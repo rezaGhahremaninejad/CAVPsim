@@ -97,14 +97,14 @@ void evaluateSolutions()
     }
 }
 
-float calcNavigationCost(const model_msgs::VehicleStates s, float x1_final, float x2_final, float x3_final, float x4_final)
+float calcNavigationCost(const vehicle_model_msgs::VehicleStates s, float x1_final, float x2_final, float x3_final, float x4_final)
 {
     //ROS_INFO("###############################solution.navigation_cost: [%f]", pow(solution_step / (solution_step - predicted_final_step), 2));
     //return pow(solution_step / (solution_step - predicted_final_step), 2) * (pow(s.x_1 - x1_final, 2) + pow(s.x_2 - x2_final, 2) + pow(s.x_3 - x3_final, 2) + pow(s.x_4 - x4_final, 2));
     return (pow(s.x_1 - x1_final, 2) + pow(s.x_2 - x2_final, 2) + pow(s.x_3 - x3_final, 2) + pow(s.x_4 - x4_final, 2));
 }
 
-void vehicle1OutputCallback(const model_msgs::VehicleModelOutput msg)
+void vehicle1OutputCallback(const vehicle_model_msgs::VehicleModelOutput msg)
 {
     solver_msgs::solutionHolder solution;
     solution.header = msg.header;
@@ -118,7 +118,7 @@ void vehicle1OutputCallback(const model_msgs::VehicleModelOutput msg)
     //ROS_INFO("I heard: [%s]", msg->data.c_str());
 }
 
-void vehicle2OutputCallback(const model_msgs::VehicleModelOutput msg)
+void vehicle2OutputCallback(const vehicle_model_msgs::VehicleModelOutput msg)
 {
     solver_msgs::solutionHolder solution;
     solution.header = msg.header;
@@ -197,7 +197,7 @@ int main(int argc, char **argv)
         ros::Time time_stamp = ros::Time::now();
 
         //ROS_INFO("********************ve1 [%d]", initial_seed_size);
-        model_msgs::VehicleModelInput vehicle_input;
+        vehicle_model_msgs::VehicleModelInput vehicle_input;
         vehicle_input.header.seq = the_seq;
         vehicle_input.header.stamp = time_stamp;
         vehicle_input.vehicle_states.x_1 = x1_1;

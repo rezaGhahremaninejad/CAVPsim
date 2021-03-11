@@ -3,7 +3,7 @@ import numpy as np
 from matplotlib import pyplot as plt2
 
 import rospy
-from model_msgs.msg import VehicleModelOutput
+from vehicle_model_msgs.msg import VehicleModelOutput
 
 x = []
 y = []

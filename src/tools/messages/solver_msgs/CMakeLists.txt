@@ -3,7 +3,7 @@ project(solver_msgs)
 
 find_package(catkin REQUIRED COMPONENTS
   message_generation
-  model_msgs
+  vehicle_model_msgs
 )
 
 
@@ -20,11 +20,11 @@ add_message_files(
 ## Generate added messages and services with any dependencies listed here
 generate_messages(
   DEPENDENCIES
-  model_msgs
+  vehicle_model_msgs
 )
 
 catkin_package(
   CATKIN_DEPENDS
   message_runtime
-  model_msgs
+  vehicle_model_msgs
 )

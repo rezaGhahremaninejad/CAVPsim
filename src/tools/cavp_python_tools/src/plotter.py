@@ -3,7 +3,7 @@ import numpy as np
 from matplotlib import pyplot as plt1
 
 import rospy
-from model_msgs.msg import VehicleModelOutput
+from vehicle_model_msgs.msg import VehicleModelOutput
 from communication_msgs.msg import status
 # from computation_msgs.msg import status
 from solver_msgs.msg import finalSolutionArr
