@@ -1,0 +1,11 @@
+<?xml version="1.0"?>
+  <robot name="car">
+  <link name="base_link">
+    <visual name="base_visual">
+    <origin xyz="4.27 0 0.0" rpy="0 0 1.62" />
+      <geometry>
+        <mesh filename="package://vehicle_description/mesh/atak_stl.stl" scale="0.01 0.01 0.01"/>
+      </geometry>
+    </visual>
+  </link>
+</robot>
