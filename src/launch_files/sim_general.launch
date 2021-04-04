@@ -2,26 +2,31 @@
 <launch>
 
   <include file="$(find vehicle_model)/launch/vehicle_model.launch" ns="vehicleA"/> 
-  <include file="$(find vehicle_model)/launch/vehicle_model.launch" ns="vehicleB"/> 
+  <!-- <include file="$(find vehicle_model)/launch/vehicle_model.launch" ns="vehicleB"/>  -->
 
   <include file="$(find vehicle_model)/launch/control.launch" ns="vehicleA"/> 
-  <include file="$(find vehicle_model)/launch/control.launch" ns="vehicleB"/> 
+  <!-- <include file="$(find vehicle_model)/launch/control.launch" ns="vehicleB"/>  -->
 
   <include file="$(find communication_model)/launch/default.launch" ns="vehicleA"/> 
-  <include file="$(find communication_model)/launch/default.launch" ns="vehicleB"/> 
-  <include file="$(find communication_model)/launch/default.launch" ns="RSU"/> 
+  <!-- <include file="$(find communication_model)/launch/default.launch" ns="vehicleB"/>  -->
+  <!-- <include file="$(find communication_model)/launch/default.launch" ns="RSU"/>  -->
 
   <include file="$(find computation_model)/launch/default.launch" ns="vehicleA"/> 
-  <include file="$(find computation_model)/launch/default.launch" ns="vehicleB"/> 
+  <!-- <include file="$(find computation_model)/launch/default.launch" ns="vehicleB"/>  -->
 
   
-  <include file="$(find okan_linea)/launch/display.launch" ns="vehicleA"/> 
+  <include file="$(find vehicle_description)/launch/lexus.launch"/> 
+  <include file="$(find cavpsim_clock_server)/launch/default.launch"/> 
   
   <include file="$(find map_file)/launch/points_map_loader.launch" ns="PCDLoader">
     <arg name="path_pcd" default='"$(env HOME)/CAVPsim/src/enviornment/map/PCD/test.pcd"' />
   </include>
-      
   
-  <node pkg="rviz" type="rviz" name="rviz" output="screen"/>
+  <node type="cavpsim_gui" name="cavpsim_gui" pkg="cavpsim_gui" output="screen"/>
+
+  <node type="static_transform_publisher" name="map_to_odom" pkg="tf" output="screen" args="0 0 0 0 0 0 1 map odom 10" />
+  <!-- <node type="static_transform_publisher" name="odom_to_base_link" pkg="tf" output="screen" args="0 0 0 0 0 0 1 odom base_link 10"/> -->
+  <!-- <node type="static_transform_publisher" name="body_to_base_link" pkg="tf" output="screen" args="0 0 0 0 0 0 1 base_link body 10"/> -->
+  <node type="rviz" name="rviz" pkg="rviz" output="screen" args="-d $(env HOME)/CAVPsim/src/tools/rviz/default.rviz" />
 
 </launch>
