@@ -19,7 +19,7 @@ bool solver_req = false;
 bool msg_received = false;
 int seq;
 float solver_time_step;
-
+std::string base_link;
 using namespace std;
 
 void inputCallback(const vehicle_model_msgs::VehicleModelInput::ConstPtr &msg)
@@ -49,22 +49,23 @@ int main(int argc, char **argv)
 {
     ros::init(argc, argv, "model");
     ros::NodeHandle n;
-    n.param<float>("L", L, 2.7);                             //wheelbase
-    n.param<float>("m", m, 1200);                            // mass
-    n.param<float>("dt", dt, 0.01);                           // sampling time
-    n.param<float>("R", R, 0.19);                            //  effective redius
-    n.param<float>("I_d", I_d, 0.3);                         // differential ratio
-    n.param<float>("I_g", I_g, 0.3);                         // gear ratio
-    n.param<float>("Im_e", Im_e, 0.3);                       // engine rotation momentume
-    n.param<float>("Im_t", Im_t, 0.3);                       // turbine rotation momentume
-    n.param<float>("Im_w", Im_w, 0.3);                       // wheel rotation momentume
-    n.param<float>("solver_time_step", solver_time_step, 0.1); // wheel rotation momentume
-    n.param<bool>("solver_req", solver_req, true);           // wheel rotation momentume
-    n.param<float>("ideal_fuel_cost", ideal_fuel_cost, 0.01);           // wheel rotation momentume
-    n.param<float>("initial_x", x_1, 0.01);           // wheel rotation momentume
-    n.param<float>("initial_y", x_2, 0.01);           // wheel rotation momentume
-    n.param<float>("initial_heading", x_3, 0.01);           // wheel rotation momentume
-    n.param<float>("initial_speed", x_4, 0.01);           // wheel rotation momentume
+    n.param<float>("model/L", L, 2.7);                             //wheelbase
+    n.param<float>("model/m", m, 1200);                            // mass
+    n.param<float>("model/dt", dt, 0.01);                           // sampling time
+    n.param<float>("model/R", R, 0.19);                            //  effective redius
+    n.param<float>("model/I_d", I_d, 0.3);                         // differential ratio
+    n.param<float>("model/I_g", I_g, 0.3);                         // gear ratio
+    n.param<float>("model/Im_e", Im_e, 0.3);                       // engine rotation momentume
+    n.param<float>("model/Im_t", Im_t, 0.3);                       // turbine rotation momentume
+    n.param<float>("model/Im_w", Im_w, 0.3);                       // wheel rotation momentume
+    n.param<float>("model/solver_time_step", solver_time_step, 0.1); // wheel rotation momentume
+    n.param<bool>("model/solver_req", solver_req, true);           // wheel rotation momentume
+    n.param<float>("model/ideal_fuel_cost", ideal_fuel_cost, 0.01);           // wheel rotation momentume
+    n.param<float>("model/initial_x", x_1, 0.01);           // wheel rotation momentume
+    n.param<float>("model/initial_y", x_2, 0.01);           // wheel rotation momentume
+    n.param<float>("model/initial_heading", x_3, 0.01);           // wheel rotation momentume
+    n.param<float>("model/initial_speed", x_4, 0.01);           // wheel rotation momentume
+    n.param<std::string>("model/base_link", base_link, "base_link");           // wheel rotation momentume
 
     //n.param<float>("GR", GR, 0.3);
     GR = I_d * I_g;
@@ -74,9 +75,9 @@ int main(int argc, char **argv)
     B_4 = 1.7363 * (pow(10, -5)) / R;
     B_5 = 6.4277 * (pow(10, -8)) * I_d / pow(R, 2);
     B_6 = 1.6088 * (pow(10, -7)) / (R * I_d);
-    ros::Publisher ouput_pub = n.advertise<vehicle_model_msgs::VehicleModelOutput>("output", 1000);
-    ros::Publisher nav_pub = n.advertise<nav_msgs::Odometry>("odometry", 1000);
-    ros::Subscriber input_sub = n.subscribe("input", 1000, inputCallback);
+    ros::Publisher ouput_pub = n.advertise<vehicle_model_msgs::VehicleModelOutput>("/vehicle_model/output", 1000);
+    ros::Publisher nav_pub = n.advertise<nav_msgs::Odometry>("/vehicle_model/odometry", 1000);
+    ros::Subscriber input_sub = n.subscribe("/vehicle_model/input", 1000, inputCallback);
 
     tf::TransformBroadcaster odom_broadcaster;
 
@@ -98,11 +99,11 @@ int main(int argc, char **argv)
             odometry_msg.header.seq = seq;
             odometry_msg.header.stamp = ros::Time::now();
             odometry_msg.header.frame_id = "odom";
-            odometry_msg.child_frame_id = "base_link";
+            odometry_msg.child_frame_id = base_link;
 
             vehicle_model_msgs::VehicleModelOutput output;
             output.header.seq = seq;
-            ROS_INFO("######################## Received message sequence: [%d]", seq);
+            // ROS_INFO("######################## Received message sequence: [%d]", seq);
             output.header.stamp = odometry_msg.header.stamp;
 
             // REF: https://www.coursera.org/lecture/intro-self-driving-cars/lesson-4-longitudinal-vehicle-modeling-V8htX
@@ -156,7 +157,7 @@ int main(int argc, char **argv)
             geometry_msgs::TransformStamped odom_trans;
             odom_trans.header.stamp = odometry_msg.header.stamp;
             odom_trans.header.frame_id = "odom";
-            odom_trans.child_frame_id = "base_link";
+            odom_trans.child_frame_id = base_link;
 
             odom_trans.transform.translation.x = x_1;
             odom_trans.transform.translation.y = x_2;
