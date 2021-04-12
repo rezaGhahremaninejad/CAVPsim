@@ -13,6 +13,7 @@ find_package(catkin REQUIRED COMPONENTS
   std_msgs
   vehicle_model_msgs
   communication_msgs
+  computation_msgs
   tf
 )
 
