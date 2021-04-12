@@ -1,28 +1,136 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <launch>
 
-  <include file="$(find vehicle_model)/launch/vehicle_model.launch" ns="vehicleA"/> 
-  <!-- <include file="$(find vehicle_model)/launch/vehicle_model.launch" ns="vehicleB"/>  -->
+  <!-- COMMON ARGs -->
+  <arg name="dt" value="0.001"/>
+  <arg name="_vehicleA_namespace" value="vehicleA"/>
+  <arg name="_vehicleB_namespace" value="vehicleB"/>
+  <arg name="_vehicleC_namespace" value="vehicleC"/>
 
-  <include file="$(find vehicle_model)/launch/control.launch" ns="vehicleA"/> 
+  <node type="cavpsim_gui" name="cavpsim_gui" pkg="cavpsim_gui" output="screen"/>
+  <include file="$(find cavpsim_clock_server)/launch/default.launch"/> 
+  <!-- <include file="$(find vehicle_model)/launch/control.launch">
+    <arg name="out_put_topic" default="vehicle_model/input"/>
+    <arg name="in_put_topic" default="vehicle_model/output"/>
+    <arg name="T_1" value="10"/>
+    <arg name="T_2" value="12"/>
+    <arg name="T_3" value="15"/>
+    <arg name="T_4" value="18"/>
+    <arg name="T_5" value="19"/>
+    <arg name="T_6" value="22"/>
+    <arg name="T_1_U" value="22"/>
+    <arg name="T_1_W" value="22"/>
+    <arg name="T_2_U" value="22"/>
+    <arg name="T_2_W" value="22"/>
+    <arg name="T_3_U" value="22"/>
+    <arg name="T_3_W" value="22"/>
+    <arg name="T_4_U" value="22"/>
+    <arg name="T_4_W" value="22"/>
+    <arg name="T_5_U" value="22"/>
+    <arg name="T_5_W" value="22"/>
+    <arg name="INITIAL_U" value="22"/>
+    <arg name="INITIAL_W" value="22"/>
+    <arg name="FINAL_U" value="22"/>
+    <arg name="FINAL_W" value="22"/>
+    <arg name="control_namespace" value="$(arg _vehicleA_namespace)"/>
+  </include> 
+
+  <include file="$(find vehicle_model)/launch/control.launch">
+    <arg name="out_put_topic" default="vehicle_model/input"/>
+    <arg name="in_put_topic" default="vehicle_model/output"/>
+    <arg name="T_1" value="10"/>
+    <arg name="T_2" value="12"/>
+    <arg name="T_3" value="15"/>
+    <arg name="T_4" value="18"/>
+    <arg name="T_5" value="19"/>
+    <arg name="T_6" value="22"/>
+    <arg name="T_1_U" value="22"/>
+    <arg name="T_1_W" value="22"/>
+    <arg name="T_2_U" value="22"/>
+    <arg name="T_2_W" value="22"/>
+    <arg name="T_3_U" value="22"/>
+    <arg name="T_3_W" value="22"/>
+    <arg name="T_4_U" value="22"/>
+    <arg name="T_4_W" value="22"/>
+    <arg name="T_5_U" value="22"/>
+    <arg name="T_5_W" value="22"/>
+    <arg name="INITIAL_U" value="22"/>
+    <arg name="INITIAL_W" value="22"/>
+    <arg name="FINAL_U" value="22"/>
+    <arg name="FINAL_W" value="22"/>
+    <arg name="control_namespace" value="$(arg _vehicleB_namespace)"/>
+  </include> -->
+
+  <include file="$(find vehicle_model)/launch/vehicle_model.launch">
+    <arg name="L" value="2.7"/>
+    <arg name="m" value="1200"/>
+    <arg name="R" value="0.19"/>
+    <arg name="I_d" value="0.3"/>
+    <arg name="I_g" value="0.3"/>
+    <arg name="Im_e" value="0.3"/>
+    <arg name="Im_t" value="0.3"/>
+    <arg name="Im_w" value="0.3"/>
+    <arg name="initial_x" value="0.3"/>
+    <arg name="initial_y" value="0.3"/>
+    <arg name="initial_heading" value="0.05"/>
+    <arg name="initial_speed" value="0.0"/>
+    <arg name="vehicle_namespace" value="$(arg _vehicleA_namespace)"/>
+  </include> 
+
+  <include file="$(find vehicle_model)/launch/vehicle_model.launch">
+    <arg name="L" value="2.7"/>
+    <arg name="m" value="1200"/>
+    <arg name="R" value="0.19"/>
+    <arg name="I_d" value="0.3"/>
+    <arg name="I_g" value="0.3"/>
+    <arg name="Im_e" value="0.3"/>
+    <arg name="Im_t" value="0.3"/>
+    <arg name="Im_w" value="0.3"/>
+    <arg name="initial_x" value="0.3"/>
+    <arg name="initial_y" value="0.3"/>
+    <arg name="initial_heading" value="0.05"/>
+    <arg name="initial_speed" value="0.0"/>
+    <arg name="vehicle_namespace" value="$(arg _vehicleB_namespace)"/>
+  </include> 
+
+  <!-- <include file="$(find vehicle_description)/launch/lexus.launch">
+    <arg name="vehicle_namespace" value="$(arg _vehicleA_namespace)"/>
+  </include> 
+
+  <include file="$(find vehicle_description)/launch/lexus.launch">
+    <arg name="vehicle_namespace" value="$(arg _vehicleB_namespace)"/>
+  </include> -->
   <!-- <include file="$(find vehicle_model)/launch/control.launch" ns="vehicleB"/>  -->
 
-  <include file="$(find communication_model)/launch/default.launch" ns="vehicleA"/> 
-  <!-- <include file="$(find communication_model)/launch/default.launch" ns="vehicleB"/>  -->
-  <!-- <include file="$(find communication_model)/launch/default.launch" ns="RSU"/>  -->
 
-  <include file="$(find computation_model)/launch/default.launch" ns="vehicleA"/> 
-  <!-- <include file="$(find computation_model)/launch/default.launch" ns="vehicleB"/>  -->
+ <include file="$(find communication_gate)/launch/default.launch">
+    <arg name="communication_namespace" value="$(arg _vehicleA_namespace)"/>
+  </include> 
 
-  
-  <include file="$(find vehicle_description)/launch/lexus.launch"/> 
-  <include file="$(find cavpsim_clock_server)/launch/default.launch"/> 
+  <include file="$(find communication_gate)/launch/default.launch">
+    <arg name="communication_namespace" value="$(arg _vehicleB_namespace)"/>
+  </include> 
+
+
+  <include file="$(find communication_model)/launch/default.launch">
+    <arg name="communication_namespace" value="$(arg _vehicleA_namespace)"/>
+  </include> 
+  <include file="$(find communication_model)/launch/default.launch">
+    <arg name="communication_namespace" value="$(arg _vehicleB_namespace)"/>
+  </include> 
+
+  <include file="$(find computation_model)/launch/default.launch">
+    <arg name="computation_namespace" value="$(arg _vehicleA_namespace)"/>
+  </include> 
+
+  <include file="$(find computation_model)/launch/default.launch">
+    <arg name="computation_namespace" value="$(arg _vehicleB_namespace)"/>
+  </include> 
   
   <include file="$(find map_file)/launch/points_map_loader.launch" ns="PCDLoader">
     <arg name="path_pcd" default='"$(env HOME)/CAVPsim/src/enviornment/map/PCD/test.pcd"' />
   </include>
   
-  <node type="cavpsim_gui" name="cavpsim_gui" pkg="cavpsim_gui" output="screen"/>
 
   <node type="static_transform_publisher" name="map_to_odom" pkg="tf" output="screen" args="0 0 0 0 0 0 1 map odom 10" />
   <!-- <node type="static_transform_publisher" name="odom_to_base_link" pkg="tf" output="screen" args="0 0 0 0 0 0 1 odom base_link 10"/> -->
