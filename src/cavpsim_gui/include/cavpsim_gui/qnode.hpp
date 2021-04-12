@@ -47,7 +47,7 @@ public:
 	void run();
 	bool NEW_VEHCILE_CMD_MSG = false;
 	// void us_1_callBack(const sensor_msgs::Range msg);
-	VehicleModelInput _vehicle_input_msg;
+	VehicleModelInput _vehicleA_input_msg,_vehicleB_input_msg;
 
 	// adastec_msgs::NodeCtrl redundant_node_ctrl_msg;
 
@@ -75,7 +75,7 @@ Q_SIGNALS:
 private:
 	int init_argc;
 	char** init_argv;
-	ros::Publisher vehicle_ctrl_pub;
+	ros::Publisher vehicleA_ctrl_pub, vehicleB_ctrl_pub;
     QStringListModel logging_model;
 	ros::Subscriber us_1; 
 
