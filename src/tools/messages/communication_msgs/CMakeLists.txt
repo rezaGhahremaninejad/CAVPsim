@@ -6,6 +6,7 @@ find_package(catkin REQUIRED COMPONENTS
   std_msgs
   solver_msgs
   vehicle_model_msgs
+  computation_msgs
 )
 
 
@@ -16,6 +17,7 @@ add_message_files(
   status.msg
   BristolTx.msg
   BristolRx.msg
+  ComMessage.msg
 )
 
 ## Generate added messages and services with any dependencies listed here
@@ -24,6 +26,7 @@ generate_messages(
   std_msgs
   solver_msgs
   vehicle_model_msgs
+  computation_msgs
 )
 
 catkin_package(
