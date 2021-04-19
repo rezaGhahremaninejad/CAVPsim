@@ -5,7 +5,7 @@
 #include "geometry_msgs/PoseStamped.h"
 #include <tf/transform_broadcaster.h>
 #include <nav_msgs/Odometry.h>
-
+#include <visualization_msgs/Marker.h>
 #include <cmath>
 
 float L, m, ga, dt, R, I_d, I_g, Im_e, Im_t, Im_w, GR, ideal_fuel_cost;
@@ -78,7 +78,7 @@ int main(int argc, char **argv)
     ros::Publisher ouput_pub = n.advertise<vehicle_model_msgs::VehicleModelOutput>("/vehicle_model/output", 1000);
     ros::Publisher nav_pub = n.advertise<nav_msgs::Odometry>("/vehicle_model/odometry", 1000);
     ros::Subscriber input_sub = n.subscribe("/vehicle_model/input", 1000, inputCallback);
-
+    ros::Publisher vis_pub = n.advertise<visualization_msgs::Marker>( "/vehicle_model/marker", 0 );     
     tf::TransformBroadcaster odom_broadcaster;
 
     ros::Rate loop_rate(1 / dt);
@@ -88,7 +88,8 @@ int main(int argc, char **argv)
         dt = solver_time_step;
         ROS_INFO("########################y:");
     }
-
+    // for initialization
+    msg_received = true;
     while (ros::ok())
     {
         ros::spinOnce();
@@ -168,6 +169,25 @@ int main(int argc, char **argv)
             odom_broadcaster.sendTransform(odom_trans);
 
             nav_pub.publish(odometry_msg);
+            visualization_msgs::Marker marker;
+            marker.header.frame_id = base_link;
+            marker.header.stamp = ros::Time();
+            marker.ns = base_link + "_ns";
+            marker.id = 0;
+            marker.type = visualization_msgs::Marker::CUBE;
+            marker.action = visualization_msgs::Marker::ADD;
+            // marker.pose = pose;
+            // marker.pose.orientation = myQuaternion;
+            marker.scale.x = 6;
+            marker.scale.y = 2.4;
+            marker.scale.z = 2.2;
+            marker.color.a = 1.0; // Don't forget to set the alpha!
+            marker.color.r = 0.0;
+            marker.color.g = 1.0;
+            marker.color.b = 0.0;
+            //only if using a MESH_RESOURCE marker type:
+            // marker.mesh_resource = "package://pr2_description/meshes/base_v0/base.dae";
+            vis_pub.publish( marker );
             msg_received = false;
         }
 
