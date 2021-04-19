@@ -80,7 +80,7 @@
         <property name="frameShadow">
          <enum>QFrame::Raised</enum>
         </property>
-        <widget class="QPushButton" name="manual_steering_left_btn">
+        <widget class="QPushButton" name="vehicleA_manual_steering_left_btn">
          <property name="geometry">
           <rect>
            <x>10</x>
@@ -93,7 +93,7 @@
           <string>Steering Left</string>
          </property>
         </widget>
-        <widget class="QPushButton" name="manual_steering_right_btn">
+        <widget class="QPushButton" name="vehicleA_manual_steering_right_btn">
          <property name="geometry">
           <rect>
            <x>170</x>
@@ -106,7 +106,7 @@
           <string>Steering right</string>
          </property>
         </widget>
-        <widget class="QPushButton" name="manual_brake_btn">
+        <widget class="QPushButton" name="vehicleA_manual_brake_btn">
          <property name="geometry">
           <rect>
            <x>10</x>
@@ -119,7 +119,7 @@
           <string>Brake</string>
          </property>
         </widget>
-        <widget class="QPushButton" name="manual_accel_btn">
+        <widget class="QPushButton" name="vehicleA_manual_accel_btn">
          <property name="geometry">
           <rect>
            <x>10</x>
@@ -158,14 +158,124 @@
           <string>Vehicle model name space:</string>
          </property>
         </widget>
-        <widget class="QLineEdit" name="vehicle_model_ns_val">
+        <widget class="QPlainTextEdit" name="vehicle_model_ns_val">
          <property name="geometry">
           <rect>
-           <x>202</x>
-           <y>30</y>
+           <x>200</x>
+           <y>20</y>
            <width>121</width>
+           <height>31</height>
+          </rect>
+         </property>
+         <property name="plainText">
+          <string>vehicleA</string>
+         </property>
+        </widget>
+       </widget>
+       <widget class="QFrame" name="frame_3">
+        <property name="geometry">
+         <rect>
+          <x>0</x>
+          <y>160</y>
+          <width>331</width>
+          <height>151</height>
+         </rect>
+        </property>
+        <property name="frameShape">
+         <enum>QFrame::StyledPanel</enum>
+        </property>
+        <property name="frameShadow">
+         <enum>QFrame::Raised</enum>
+        </property>
+        <widget class="QPushButton" name="vehicleB_manual_steering_left_btn">
+         <property name="geometry">
+          <rect>
+           <x>10</x>
+           <y>90</y>
+           <width>151</width>
            <height>25</height>
           </rect>
+         </property>
+         <property name="text">
+          <string>Steering Left</string>
+         </property>
+        </widget>
+        <widget class="QPushButton" name="vehicleB_manual_steering_right_btn">
+         <property name="geometry">
+          <rect>
+           <x>170</x>
+           <y>90</y>
+           <width>151</width>
+           <height>25</height>
+          </rect>
+         </property>
+         <property name="text">
+          <string>Steering right</string>
+         </property>
+        </widget>
+        <widget class="QPushButton" name="vehicleB_manual_brake_btn">
+         <property name="geometry">
+          <rect>
+           <x>10</x>
+           <y>120</y>
+           <width>311</width>
+           <height>25</height>
+          </rect>
+         </property>
+         <property name="text">
+          <string>Brake</string>
+         </property>
+        </widget>
+        <widget class="QPushButton" name="vehicleB_manual_accel_btn">
+         <property name="geometry">
+          <rect>
+           <x>10</x>
+           <y>60</y>
+           <width>311</width>
+           <height>25</height>
+          </rect>
+         </property>
+         <property name="text">
+          <string>Accelerate</string>
+         </property>
+        </widget>
+        <widget class="QLabel" name="label_8">
+         <property name="geometry">
+          <rect>
+           <x>10</x>
+           <y>10</y>
+           <width>111</width>
+           <height>17</height>
+          </rect>
+         </property>
+         <property name="text">
+          <string>Manual Control</string>
+         </property>
+        </widget>
+        <widget class="QLabel" name="label_9">
+         <property name="geometry">
+          <rect>
+           <x>10</x>
+           <y>30</y>
+           <width>191</width>
+           <height>17</height>
+          </rect>
+         </property>
+         <property name="text">
+          <string>Vehicle model name space:</string>
+         </property>
+        </widget>
+        <widget class="QPlainTextEdit" name="vehicle_model_ns_val_3">
+         <property name="geometry">
+          <rect>
+           <x>200</x>
+           <y>20</y>
+           <width>121</width>
+           <height>31</height>
+          </rect>
+         </property>
+         <property name="plainText">
+          <string>vehicleB</string>
          </property>
         </widget>
        </widget>

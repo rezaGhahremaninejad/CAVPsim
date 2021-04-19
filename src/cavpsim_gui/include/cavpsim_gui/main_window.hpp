@@ -48,10 +48,14 @@ public Q_SLOTS:
 	void on_actionAbout_triggered();
 	void on_button_connect_clicked(bool check );
 	void on_checkbox_use_environment_stateChanged(int state);
-	void on_manual_accel_btn_clicked(bool check );
-	void on_manual_brake_btn_clicked(bool check );
-	void on_manual_steering_left_btn_clicked(bool check );
-	void on_manual_steering_right_btn_clicked(bool check );
+	void on_vehicleA_manual_accel_btn_clicked(bool check );
+	void on_vehicleB_manual_accel_btn_clicked(bool check );
+	void on_vehicleA_manual_brake_btn_clicked(bool check );
+	void on_vehicleB_manual_brake_btn_clicked(bool check );
+	void on_vehicleA_manual_steering_left_btn_clicked(bool check );
+	void on_vehicleB_manual_steering_left_btn_clicked(bool check );
+	void on_vehicleA_manual_steering_right_btn_clicked(bool check );
+	void on_vehicleB_manual_steering_right_btn_clicked(bool check );
 
     /******************************************
     ** Manual connections
