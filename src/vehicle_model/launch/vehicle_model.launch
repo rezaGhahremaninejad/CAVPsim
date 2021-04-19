@@ -35,6 +35,7 @@
     <remap from="/vehicle_model/output" to="/$(arg vehicle_namespace)/vehicle_model/output"/>
     <remap from="/vehicle_model/input" to="/$(arg vehicle_namespace)/vehicle_model/input"/>
     <remap from="/vehicle_model/odometry" to="/$(arg vehicle_namespace)/vehicle_model/odometry"/>
+    <remap from="/vehicle_model/marker" to="/$(arg vehicle_namespace)/vehicle_model/marker"/>
   </node>
 
 </launch>
