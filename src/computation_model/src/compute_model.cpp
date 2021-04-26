@@ -1,5 +1,6 @@
 #include "ros/ros.h"
 #include "computation_msgs/status.h"
+#include "communication_msgs/ComMessage.h"
 #include "rosgraph_msgs/Clock.h"
 #include <ctime>
 #include <cmath>
@@ -11,9 +12,8 @@ int seq;
 int LOOP_REPS;
 using namespace std;
 
-void clockCallback(const rosgraph_msgs::Clock::ConstPtr &msg)
+void rxCallback(const communication_msgs::ComMessage::ConstPtr &msg)
 {
-    _clock = *msg;
 }
 
 int main(int argc, char **argv)
@@ -25,7 +25,7 @@ int main(int argc, char **argv)
     n.param<double>("/compute_model/app_flo", app_flo, 10000);
 
     ros::Publisher status_pub = n.advertise<computation_msgs::status>("/computation/status", 1000);
-    // ros::Subscriber computation_sub = n.subscribe("clock", 1000, clockCallback);
+    ros::Subscriber computation_sub = n.subscribe("/rx_com", 1000, rxCallback);
 
     ros::Rate loop_rate(1000);
     LOOP_REPS = app_flo*batch_size;

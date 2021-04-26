@@ -5,7 +5,7 @@ find_package(catkin REQUIRED COMPONENTS
   message_generation
   std_msgs
   solver_msgs
-  vehicle_model_msgs
+  cav_vehicle_model_msgs
   computation_msgs
 )
 
@@ -25,7 +25,7 @@ generate_messages(
   DEPENDENCIES
   std_msgs
   solver_msgs
-  vehicle_model_msgs
+  cav_vehicle_model_msgs
   computation_msgs
 )
 
@@ -34,5 +34,5 @@ catkin_package(
   message_runtime
   std_msgs
   solver_msgs
-  vehicle_model_msgs
+  cav_vehicle_model_msgs
 )

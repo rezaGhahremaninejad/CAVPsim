@@ -6,8 +6,8 @@
     <param name="MESSAGE_RATE" value='0.1'/>
     <remap from="output_tx" to="output"/>
     <remap from="output_rx" to="output"/>
-    <remap from="input_tx" to="vehicle1/input_tx"/>
-    <remap from="input_rx" to="vehicle1/input_rx"/>
+    <remap from="input_tx" to="vehicleA/input_tx"/>
+    <remap from="input_rx" to="vehicleA/input_rx"/>
   </node>
 
 </launch>

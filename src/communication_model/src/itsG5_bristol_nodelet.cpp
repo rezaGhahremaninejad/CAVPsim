@@ -8,7 +8,7 @@
 #include <communication_msgs/BristolTx.h>
 #include <communication_msgs/ComMessage.h>
 #include <computation_msgs/status.h>
-#include <vehicle_model_msgs/VehicleModelOutput.h>
+#include <cav_vehicle_model_msgs/VehicleModelOutput.h>
 #include <future>
 #include <string>
 #include <ros/callback_queue.h>

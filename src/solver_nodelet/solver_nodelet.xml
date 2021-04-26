@@ -5,7 +5,7 @@
     </description>
   </class>
 
-  <class name="solver_nodelet/vehicle_model" type="solver_nodelet::vehicle_model" base_class_type="nodelet::Nodelet">
+  <class name="solver_nodelet/cav_vehicle_model" type="solver_nodelet::cav_vehicle_model" base_class_type="nodelet::Nodelet">
     <description> 
       A node to add a value and republish.
     </description>

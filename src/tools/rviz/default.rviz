@@ -133,12 +133,12 @@ Visualization Manager:
         Shaft Length: 1
         Shaft Radius: 0.05000000074505806
         Value: Arrow
-      Topic: /vehicleA/vehicle_model/odometry
+      Topic: /vehicleA/cav_vehicle_model/odometry
       Unreliable: false
       Value: true
     - Class: rviz/Marker
       Enabled: true
-      Marker Topic: /vehicleA/vehicle_model/marker
+      Marker Topic: /vehicleA/cav_vehicle_model/marker
       Name: Marker
       Namespaces:
         {}
@@ -146,7 +146,7 @@ Visualization Manager:
       Value: true
     - Class: rviz/Marker
       Enabled: true
-      Marker Topic: /vehicleB/vehicle_model/marker
+      Marker Topic: /vehicleB/cav_vehicle_model/marker
       Name: Marker
       Namespaces:
         {}

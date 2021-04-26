@@ -3,7 +3,7 @@ import numpy as np
 from matplotlib import pyplot as plt2
 
 import rospy
-from vehicle_model_msgs.msg import VehicleModelOutput
+from cav_vehicle_model_msgs.msg import VehicleModelOutput
 
 x = []
 y = []
@@ -23,7 +23,7 @@ if __name__ == '__main__':
     counter = 0
 
     rospy.init_node("plotter_control")
-    rospy.Subscriber("vehicle1/output", VehicleModelOutput, plot_x)
+    rospy.Subscriber("vehicleA/output", VehicleModelOutput, plot_x)
     plt2.ion()
     plt2.show()
     rospy.spin()

@@ -3,7 +3,7 @@ import numpy as np
 from matplotlib import pyplot as plt1
 
 import rospy
-from vehicle_model_msgs.msg import VehicleModelOutput
+from cav_vehicle_model_msgs.msg import VehicleModelOutput
 from communication_msgs.msg import status
 # from computation_msgs.msg import status
 from solver_msgs.msg import finalSolutionArr
@@ -28,31 +28,31 @@ missed_messages = []
 execution_time = []
 machine_availabel_flops = []
 
-vehicle1_seq = []
-vehicle2_seq = []
-vehicle1_navigation_cost = []
-vehicle1_fuel_cost = []
-vehicle1_collision_cost = []
-vehicle2_navigation_cost = []
-vehicle2_fuel_cost = []
-vehicle2_collision_cost = []
-solution_step = []
+vehicleA_seq = []
+vehicleB_seq = []
+vehicleA_navigation_cost = []
+vehicleA_fuel_cost = []
+vehicleA_collision_cost = []
+vehicleB_navigation_cost = []
+vehicleB_fuel_cost = []
+vehicleB_collision_cost = []
+SOLVER_STEP = []
 
-vehicle1Solution_vehicleStates_x1 = []
-vehicle1Solution_vehicleStates_x2 = []
-vehicle1Solution_vehicleStates_x3 = []
-vehicle1Solution_vehicleStates_x4 = []
+vehicleASolution_vehicleStates_x1 = []
+vehicleASolution_vehicleStates_x2 = []
+vehicleASolution_vehicleStates_x3 = []
+vehicleASolution_vehicleStates_x4 = []
 
-vehicle2Solution_vehicleStates_x1 = []
-vehicle2Solution_vehicleStates_x2 = []
-vehicle2Solution_vehicleStates_x3 = []
-vehicle2Solution_vehicleStates_x4 = []
+vehicleBSolution_vehicleStates_x1 = []
+vehicleBSolution_vehicleStates_x2 = []
+vehicleBSolution_vehicleStates_x3 = []
+vehicleBSolution_vehicleStates_x4 = []
 
-vehicle1Solution_VehicleControlSignals_u = []
-vehicle2Solution_VehicleControlSignals_u = []
+vehicleASolution_VehicleControlSignals_u = []
+vehicleBSolution_VehicleControlSignals_u = []
 
-vehicle1Solution_VehicleControlSignals_w = []
-vehicle2Solution_VehicleControlSignals_w = []
+vehicleASolution_VehicleControlSignals_w = []
+vehicleBSolution_VehicleControlSignals_w = []
 
 dataReceived = False
 thisTime = rospy.Time()
@@ -71,29 +71,29 @@ def solution_plot_x(msg):
     global dataReceived
     global thisTime
     dataReceived = True
-    vehicle1_navigation_cost.append(msg.solution[-1].vehicle1_solution.navigation_cost)
-    vehicle1_fuel_cost.append(msg.solution[-1].vehicle1_solution.fuel_cost)
-    vehicle1_collision_cost.append(msg.solution[-1].vehicle1_solution.collision_risk)
-    vehicle1Solution_vehicleStates_x1.append(msg.solution[-1].vehicle1_solution.vehicle_states.x_1)
-    vehicle1Solution_vehicleStates_x2.append(msg.solution[-1].vehicle1_solution.vehicle_states.x_2)
-    vehicle1Solution_vehicleStates_x3.append(msg.solution[-1].vehicle1_solution.vehicle_states.x_3)
-    vehicle1Solution_vehicleStates_x4.append(msg.solution[-1].vehicle1_solution.vehicle_states.x_4)
-    vehicle1Solution_VehicleControlSignals_u.append(msg.solution[-1].vehicle1_solution.vehicle_control_signals.u)
-    vehicle1Solution_VehicleControlSignals_w.append(msg.solution[-1].vehicle1_solution.vehicle_control_signals.w)
+    vehicleA_navigation_cost.append(msg.solution[-1].vehicleA_solution.navigation_cost)
+    vehicleA_fuel_cost.append(msg.solution[-1].vehicleA_solution.fuel_cost)
+    vehicleA_collision_cost.append(msg.solution[-1].vehicleA_solution.collision_risk)
+    vehicleASolution_vehicleStates_x1.append(msg.solution[-1].vehicleA_solution.vehicle_states.x_1)
+    vehicleASolution_vehicleStates_x2.append(msg.solution[-1].vehicleA_solution.vehicle_states.x_2)
+    vehicleASolution_vehicleStates_x3.append(msg.solution[-1].vehicleA_solution.vehicle_states.x_3)
+    vehicleASolution_vehicleStates_x4.append(msg.solution[-1].vehicleA_solution.vehicle_states.x_4)
+    vehicleASolution_VehicleControlSignals_u.append(msg.solution[-1].vehicleA_solution.vehicle_control_signals.u)
+    vehicleASolution_VehicleControlSignals_w.append(msg.solution[-1].vehicleA_solution.vehicle_control_signals.w)
     
-    vehicle2_navigation_cost.append(msg.solution[-1].vehicle2_solution.navigation_cost)
-    vehicle2_fuel_cost.append(msg.solution[-1].vehicle2_solution.fuel_cost)
-    vehicle2_collision_cost.append(msg.solution[-1].vehicle2_solution.collision_risk)
-    vehicle2Solution_vehicleStates_x1.append(msg.solution[-1].vehicle2_solution.vehicle_states.x_1)
-    vehicle2Solution_vehicleStates_x2.append(msg.solution[-1].vehicle2_solution.vehicle_states.x_2)
-    vehicle2Solution_vehicleStates_x3.append(msg.solution[-1].vehicle2_solution.vehicle_states.x_3)
-    vehicle2Solution_vehicleStates_x4.append(msg.solution[-1].vehicle2_solution.vehicle_states.x_4)
-    vehicle2Solution_VehicleControlSignals_u.append(msg.solution[-1].vehicle2_solution.vehicle_control_signals.u)
-    vehicle2Solution_VehicleControlSignals_w.append(msg.solution[-1].vehicle2_solution.vehicle_control_signals.w)
-    solution_step.append(msg.solution[-1].solution_step)
-    time.append(1000*msg.solution[-1].vehicle1_solution.header.stamp.secs + msg.solution[-1].vehicle1_solution.header.stamp.nsecs/1000000)
-    vehicle1_seq.append(msg.solution[-1].vehicle1_solution.header.seq)
-    vehicle2_seq.append(msg.solution[-1].vehicle2_solution.header.seq)
+    vehicleB_navigation_cost.append(msg.solution[-1].vehicleB_solution.navigation_cost)
+    vehicleB_fuel_cost.append(msg.solution[-1].vehicleB_solution.fuel_cost)
+    vehicleB_collision_cost.append(msg.solution[-1].vehicleB_solution.collision_risk)
+    vehicleBSolution_vehicleStates_x1.append(msg.solution[-1].vehicleB_solution.vehicle_states.x_1)
+    vehicleBSolution_vehicleStates_x2.append(msg.solution[-1].vehicleB_solution.vehicle_states.x_2)
+    vehicleBSolution_vehicleStates_x3.append(msg.solution[-1].vehicleB_solution.vehicle_states.x_3)
+    vehicleBSolution_vehicleStates_x4.append(msg.solution[-1].vehicleB_solution.vehicle_states.x_4)
+    vehicleBSolution_VehicleControlSignals_u.append(msg.solution[-1].vehicleB_solution.vehicle_control_signals.u)
+    vehicleBSolution_VehicleControlSignals_w.append(msg.solution[-1].vehicleB_solution.vehicle_control_signals.w)
+    SOLVER_STEP.append(msg.solution[-1].SOLVER_STEP)
+    time.append(1000*msg.solution[-1].vehicleA_solution.header.stamp.secs + msg.solution[-1].vehicleA_solution.header.stamp.nsecs/1000000)
+    vehicleA_seq.append(msg.solution[-1].vehicleA_solution.header.seq)
+    vehicleB_seq.append(msg.solution[-1].vehicleB_solution.header.seq)
     thisTime = rospy.Time.now()
 
 def comStatus_plot_x(msg):
@@ -192,52 +192,52 @@ def plotter():
             #plt1.plot(time, machine_availabel_flops, label=label_str)
 
             #plt1.title('Navigation cost m^2')
-            #label_str = 'vehicle1 navigation cost per solution step'
-            #plt1.plot(solution_step, vehicle1_navigation_cost, label=label_str)
+            #label_str = 'vehicleA navigation cost per solution step'
+            #plt1.plot(SOLVER_STEP, vehicleA_navigation_cost, label=label_str)
 
             #plt1.title('Navigation cost m^2')
-            #label_str = 'vehicle2 navigation cost per solution step'
-            #plt1.plot(solution_step, vehicle2_navigation_cost, label=label_str)
+            #label_str = 'vehicleB navigation cost per solution step'
+            #plt1.plot(SOLVER_STEP, vehicleB_navigation_cost, label=label_str)
             
             #plt1.title('Fuel cost mg')
-            #label_str = 'vehicle1 fuel cost per solution step, total: ' + str(sum(vehicle1_fuel_cost))
-            #plt1.plot(solution_step, vehicle1_fuel_cost, label=label_str)
+            #label_str = 'vehicleA fuel cost per solution step, total: ' + str(sum(vehicleA_fuel_cost))
+            #plt1.plot(SOLVER_STEP, vehicleA_fuel_cost, label=label_str)
 
             #plt1.title('Fuel cost mg')
-            #label_str = 'vehicle2 fuel cost per solution step, total: ' + str(sum(vehicle2_fuel_cost))
-            #plt1.plot(solution_step, vehicle2_fuel_cost, label=label_str)
+            #label_str = 'vehicleB fuel cost per solution step, total: ' + str(sum(vehicleB_fuel_cost))
+            #plt1.plot(SOLVER_STEP, vehicleB_fuel_cost, label=label_str)
 
             #plt1.title('Collision risk 1/m^2')
-            #label_str = 'vehicle1 collision risk per solution step'
-            #plt1.plot(solution_step, vehicle1_collision_cost, label=label_str)
+            #label_str = 'vehicleA collision risk per solution step'
+            #plt1.plot(SOLVER_STEP, vehicleA_collision_cost, label=label_str)
 
             #plt1.title('Collision risk 1/m^2')
-            #label_str = 'vehicle2 collision risk per solution step'
-            #plt1.plot(solution_step, vehicle2_collision_cost, label=label_str)
+            #label_str = 'vehicleB collision risk per solution step'
+            #plt1.plot(SOLVER_STEP, vehicleB_collision_cost, label=label_str)
 
-            #plt1.title('vehicle1 solution, position')
-            #label_str = 'vehicle1 cartesian position, meter'
-            #plt1.plot(vehicle1Solution_vehicleStates_x1, vehicle1Solution_vehicleStates_x2, label=label_str)
+            #plt1.title('vehicleA solution, position')
+            #label_str = 'vehicleA cartesian position, meter'
+            #plt1.plot(vehicleASolution_vehicleStates_x1, vehicleASolution_vehicleStates_x2, label=label_str)
 
-            #plt1.title('vehicle2 solution, position')
-            #label_str = 'vehicle2 cartesian position, meter'
-            #plt1.plot(vehicle2Solution_vehicleStates_x1, vehicle2Solution_vehicleStates_x2, label=label_str)
+            #plt1.title('vehicleB solution, position')
+            #label_str = 'vehicleB cartesian position, meter'
+            #plt1.plot(vehicleBSolution_vehicleStates_x1, vehicleBSolution_vehicleStates_x2, label=label_str)
 
-            #plt1.title('vehicle1 solution, speed')
-            #label_str = 'vehicle1 speed m/s'
-            #plt1.plot(time, vehicle1Solution_vehicleStates_x4, label=label_str)
+            #plt1.title('vehicleA solution, speed')
+            #label_str = 'vehicleA speed m/s'
+            #plt1.plot(time, vehicleASolution_vehicleStates_x4, label=label_str)
 
-            #plt1.title('vehicle2solution, speed')
-            #label_str = 'vehicle2 speed m/s'
-            #plt1.plot(time, vehicle2Solution_vehicleStates_x4, label=label_str)
+            #plt1.title('vehicleBsolution, speed')
+            #label_str = 'vehicleB speed m/s'
+            #plt1.plot(time, vehicleBSolution_vehicleStates_x4, label=label_str)
 
-            #plt1.title('vehicle1 solution, heading')
-            #label_str = 'vehicle1 heading rad'
-            #plt1.plot(time, vehicle1Solution_vehicleStates_x3, label=label_str)
+            #plt1.title('vehicleA solution, heading')
+            #label_str = 'vehicleA heading rad'
+            #plt1.plot(time, vehicleASolution_vehicleStates_x3, label=label_str)
 
-            # plt1.title('vehicle2 solution, heading')
-            # label_str = 'vehicle2 heading rad'
-            # plt1.plot(time, vehicle2Solution_vehicleStates_x3, label=label_str)
+            # plt1.title('vehicleB solution, heading')
+            # label_str = 'vehicleB heading rad'
+            # plt1.plot(time, vehicleBSolution_vehicleStates_x3, label=label_str)
 
             plt1.axis("auto")
             plt1.legend()

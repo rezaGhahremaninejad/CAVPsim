@@ -24,12 +24,12 @@
 #include <string>
 #include <QThread>
 #include <QStringListModel>
-#include "vehicle_model_msgs/VehicleModelInput.h"
+#include "cav_vehicle_model_msgs/VehicleModelInput.h"
 
 /*****************************************************************************
 ** Namespaces
 *****************************************************************************/
-using namespace vehicle_model_msgs;
+using namespace cav_vehicle_model_msgs;
 
 namespace cavpsim_gui {
 

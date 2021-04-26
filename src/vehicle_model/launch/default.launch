@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <launch>
 
-  <node pkg="vehicle_model" type="model" name="model" ns="vehicle1" output="screen">
+  <node pkg="cav_vehicle_model" type="model" name="model" ns="vehicleA" output="screen">
     <param name="L" value='2.7' />
     <param name="m" value='1200' />
     <param name="dt" value='0.001' />
@@ -16,7 +16,7 @@
     <remap from="input" to="input"/> -->
   </node>
 
-  <!--<node pkg="vehicle_model" type="model" name="model" ns="vehicle2" output="screen">
+  <!--<node pkg="cav_vehicle_model" type="model" name="model" ns="vehicleB" output="screen">
     <param name="L" value='1.2' />
     <param name="m" value='600' />
     <param name="dt" value='0.01' />

@@ -8,7 +8,7 @@
 // #include "../include/Timer.h"
 using namespace std;
 clock_t _time;
-// void output_rxCallback(const vehicle_model_msgs::VehicleModelOutput msg)
+// void output_rxCallback(const cav_vehicle_model_msgs::VehicleModelOutput msg)
 // {
 //     if (vehicle_output_tx_ready)
 //     {

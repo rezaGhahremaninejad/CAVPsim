@@ -29,17 +29,17 @@
     <param name="x2_5_init" value='0' />
     <param name="x2_6_init" value='0' />
 
-    <param name="x1_1_final" value='30' />
-    <param name="x1_2_final" value='-10' />
-    <param name="x1_3_final" value='0' />
-    <param name="x1_4_final" value='0' />
+    <param name="xA_1_final" value='30' />
+    <param name="xA_2_final" value='-10' />
+    <param name="xA_3_final" value='0' />
+    <param name="xA_4_final" value='0' />
     <param name="x1_5_final" value='0' />
     <param name="x1_6_final" value='0' />
 
-    <param name="x2_1_final" value='0'/>
-    <param name="x2_2_final" value='0' />
-    <param name="x2_3_final" value='0' />
-    <param name="x2_4_final" value='0' />
+    <param name="xB_1_final" value='0'/>
+    <param name="xB_2_final" value='0' />
+    <param name="xB_3_final" value='0' />
+    <param name="xB_4_final" value='0' />
     <param name="x2_5_final" value='0' />
     <param name="x2_6_final" value='0' />
 

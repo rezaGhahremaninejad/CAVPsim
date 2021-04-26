@@ -1,6 +1,6 @@
 std_msgs/Header header
-vehicle_model_msgs/VehicleStates vehicle_states
-vehicle_model_msgs/VehicleControlSignals vehicle_control_signals
+cav_vehicle_model_msgs/VehicleStates vehicle_states
+cav_vehicle_model_msgs/VehicleControlSignals vehicle_control_signals
 float64 fuel_cost
 float64 navigation_cost
 float64 collision_risk

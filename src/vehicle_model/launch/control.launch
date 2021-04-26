@@ -26,7 +26,7 @@
   <arg name="FINAL_W" default="22"/>
   <arg name="control_namespace" default="vehicleA"/>
 
-  <node pkg="vehicle_model" type="dummy_control" name="dummy_control" ns="$(arg control_namespace)" output="screen">
+  <node pkg="cav_vehicle_model" type="dummy_control" name="dummy_control" ns="$(arg control_namespace)" output="screen">
     <param name="dt" value="$(arg dt)" />
     <remap from="output" to="$(arg out_put_topic)"/>
     <remap from="input" to="$(arg in_put_topic)"/>

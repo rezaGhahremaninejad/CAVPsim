@@ -1,6 +1,6 @@
 #include "ros/ros.h"
-#include "vehicle_model_msgs/VehicleModelInput.h"
-#include "vehicle_model_msgs/VehicleModelOutput.h"
+#include "cav_vehicle_model_msgs/VehicleModelInput.h"
+#include "cav_vehicle_model_msgs/VehicleModelOutput.h"
 #include "geometry_msgs/Pose.h"
 #include "geometry_msgs/PoseStamped.h"
 #include <tf/transform_broadcaster.h>
@@ -14,8 +14,8 @@ double delay_sec;
 
 int seq;
 
-vehicle_model_msgs::VehicleModelOutput vehicle_output_tx;
-vehicle_model_msgs::VehicleModelInput vehicle_input_tx;
+cav_vehicle_model_msgs::VehicleModelOutput vehicle_output_tx;
+cav_vehicle_model_msgs::VehicleModelInput vehicle_input_tx;
 bool vehicle_output_tx_ready = false;
 bool vehicle_input_tx_ready = false;
 ros::Time vehicle_input_rx_timeStamp;
@@ -23,7 +23,7 @@ ros::Time vehicle_output_rx_timeStamp;
 
 using namespace std;
 
-void input_rxCallback(const vehicle_model_msgs::VehicleModelInput msg)
+void input_rxCallback(const cav_vehicle_model_msgs::VehicleModelInput msg)
 {
     if (vehicle_input_tx_ready)
     {
@@ -38,7 +38,7 @@ void input_rxCallback(const vehicle_model_msgs::VehicleModelInput msg)
     //ROS_INFO("I heard: [%s]", msg->data.c_str());
 }
 
-void output_rxCallback(const vehicle_model_msgs::VehicleModelOutput msg)
+void output_rxCallback(const cav_vehicle_model_msgs::VehicleModelOutput msg)
 {
     if (vehicle_output_tx_ready)
     {
@@ -58,8 +58,8 @@ int main(int argc, char **argv)
     ros::init(argc, argv, "backbone_model");
     ros::NodeHandle n;
     n.param<double>("delay_sec", delay_sec, 0.0005);
-    ros::Publisher vehicle_output_tx_pub = n.advertise<vehicle_model_msgs::VehicleModelOutput>("output_tx", 1000);
-    ros::Publisher vehicle_input_tx_pub = n.advertise<vehicle_model_msgs::VehicleModelInput>("input_tx", 1000);
+    ros::Publisher vehicle_output_tx_pub = n.advertise<cav_vehicle_model_msgs::VehicleModelOutput>("output_tx", 1000);
+    ros::Publisher vehicle_input_tx_pub = n.advertise<cav_vehicle_model_msgs::VehicleModelInput>("input_tx", 1000);
     ros::Publisher status_pub = n.advertise<communication_msgs::status>("status", 1000);
     ros::Subscriber vehicle_input_rx_sub = n.subscribe("input_rx", 1000, input_rxCallback);
     ros::Subscriber vehicle_ouput_rx_sub = n.subscribe("output_rx", 1000, output_rxCallback);

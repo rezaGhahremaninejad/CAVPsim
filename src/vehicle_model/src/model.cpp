@@ -1,6 +1,6 @@
 #include "ros/ros.h"
-#include "vehicle_model_msgs/VehicleModelInput.h"
-#include "vehicle_model_msgs/VehicleModelOutput.h"
+#include "cav_vehicle_model_msgs/VehicleModelInput.h"
+#include "cav_vehicle_model_msgs/VehicleModelOutput.h"
 #include "geometry_msgs/Pose.h"
 #include "geometry_msgs/PoseStamped.h"
 #include <tf/transform_broadcaster.h>
@@ -22,7 +22,7 @@ float solver_time_step;
 std::string base_link;
 using namespace std;
 
-void inputCallback(const vehicle_model_msgs::VehicleModelInput::ConstPtr &msg)
+void inputCallback(const cav_vehicle_model_msgs::VehicleModelInput::ConstPtr &msg)
 {
     seq = msg->header.seq;
     if (msg->useThisStates)
@@ -75,10 +75,10 @@ int main(int argc, char **argv)
     B_4 = 1.7363 * (pow(10, -5)) / R;
     B_5 = 6.4277 * (pow(10, -8)) * I_d / pow(R, 2);
     B_6 = 1.6088 * (pow(10, -7)) / (R * I_d);
-    ros::Publisher ouput_pub = n.advertise<vehicle_model_msgs::VehicleModelOutput>("/vehicle_model/output", 1000);
-    ros::Publisher nav_pub = n.advertise<nav_msgs::Odometry>("/vehicle_model/odometry", 1000);
-    ros::Subscriber input_sub = n.subscribe("/vehicle_model/input", 1000, inputCallback);
-    ros::Publisher vis_pub = n.advertise<visualization_msgs::Marker>( "/vehicle_model/marker", 0 );     
+    ros::Publisher ouput_pub = n.advertise<cav_vehicle_model_msgs::VehicleModelOutput>("/cav_vehicle_model/output", 1000);
+    ros::Publisher nav_pub = n.advertise<nav_msgs::Odometry>("/cav_vehicle_model/odometry", 1000);
+    ros::Subscriber input_sub = n.subscribe("/cav_vehicle_model/input", 1000, inputCallback);
+    ros::Publisher vis_pub = n.advertise<visualization_msgs::Marker>( "/cav_vehicle_model/marker", 0 );     
     tf::TransformBroadcaster odom_broadcaster;
 
     ros::Rate loop_rate(1 / dt);
@@ -102,7 +102,7 @@ int main(int argc, char **argv)
             odometry_msg.header.frame_id = "odom";
             odometry_msg.child_frame_id = base_link;
 
-            vehicle_model_msgs::VehicleModelOutput output;
+            cav_vehicle_model_msgs::VehicleModelOutput output;
             output.header.seq = seq;
             // ROS_INFO("######################## Received message sequence: [%d]", seq);
             output.header.stamp = odometry_msg.header.stamp;

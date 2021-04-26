@@ -1,3 +1,3 @@
 std_msgs/Header header
 computation_msgs/status computation_status
-vehicle_model_msgs/VehicleModelOutput vehicle_model_out
+cav_vehicle_model_msgs/VehicleModelOutput cav_vehicle_model_out

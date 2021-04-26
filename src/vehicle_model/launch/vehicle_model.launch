@@ -16,7 +16,7 @@
   <arg name="initial_speed" default="0.0"/>
   <arg name="vehicle_namespace" default="vehicleA"/>
   
-  <node pkg="vehicle_model" type="model" name="model" output="screen" ns="$(arg vehicle_namespace)">
+  <node pkg="cav_vehicle_model" type="model" name="model" output="screen" ns="$(arg vehicle_namespace)">
     <param name="L" value="$(arg L)" />
     <param name="m" value="$(arg m)" />
     <param name="dt" value="$(arg dt)" />
@@ -32,10 +32,10 @@
     <param name="initial_speed" value="$(arg initial_speed)" /> 
     <param name="base_link" value="$(arg vehicle_namespace)_base_link" /> 
 
-    <remap from="/vehicle_model/output" to="/$(arg vehicle_namespace)/vehicle_model/output"/>
-    <remap from="/vehicle_model/input" to="/$(arg vehicle_namespace)/vehicle_model/input"/>
-    <remap from="/vehicle_model/odometry" to="/$(arg vehicle_namespace)/vehicle_model/odometry"/>
-    <remap from="/vehicle_model/marker" to="/$(arg vehicle_namespace)/vehicle_model/marker"/>
+    <remap from="/cav_vehicle_model/output" to="/$(arg vehicle_namespace)/cav_vehicle_model/output"/>
+    <remap from="/cav_vehicle_model/input" to="/$(arg vehicle_namespace)/cav_vehicle_model/input"/>
+    <remap from="/cav_vehicle_model/odometry" to="/$(arg vehicle_namespace)/cav_vehicle_model/odometry"/>
+    <remap from="/cav_vehicle_model/marker" to="/$(arg vehicle_namespace)/cav_vehicle_model/marker"/>
   </node>
 
 </launch>

@@ -8,7 +8,7 @@ project(solver)
 ## if COMPONENTS list like find_package(catkin REQUIRED COMPONENTS xyz)
 ## is used, also find other catkin packages
 find_package(catkin REQUIRED COMPONENTS
-  vehicle_model_msgs
+  cav_vehicle_model_msgs
   roscpp
   rospy
   solver_msgs
@@ -71,7 +71,7 @@ find_package(catkin REQUIRED COMPONENTS
 ## Generate added messages and services with any dependencies listed here
 # generate_messages(
 #   DEPENDENCIES
-#   vehicle_model_msgs#   std_msgs
+#   cav_vehicle_model_msgs#   std_msgs
 # )
 
 ################################################
@@ -106,7 +106,7 @@ find_package(catkin REQUIRED COMPONENTS
 catkin_package(
 #  INCLUDE_DIRS include
 #  LIBRARIES solver
-#  CATKIN_DEPENDS vehicle_model_msgs roscpp rospy std_msgs
+#  CATKIN_DEPENDS cav_vehicle_model_msgs roscpp rospy std_msgs
 #  DEPENDS system_lib
 )
 

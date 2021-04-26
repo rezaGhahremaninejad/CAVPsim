@@ -48,8 +48,8 @@ bool QNode::init() {
 	ros::start(); // explicitly needed since our nodehandle is going out of scope.
 	ros::NodeHandle n;
 	// Add your ros communications here.
-	vehicleA_ctrl_pub = n.advertise<VehicleModelInput>("vehicleA/vehicle_model/input", 1000);
-	vehicleB_ctrl_pub = n.advertise<VehicleModelInput>("vehicleB/vehicle_model/input", 1000);
+	vehicleA_ctrl_pub = n.advertise<VehicleModelInput>("vehicleA/cav_vehicle_model/input", 1000);
+	vehicleB_ctrl_pub = n.advertise<VehicleModelInput>("vehicleB/cav_vehicle_model/input", 1000);
 	// us_1 = n.subscribe("/USBoard/Sensor1", 10, &QNode::us_1_callBack, this);
 	// n.getParam("adastec_hmi/BREAK_THRESHOLD_JOY_param",BREAK_THRESHOLD_JOY_param);
 
@@ -68,8 +68,8 @@ bool QNode::init(const std::string &master_url, const std::string &host_url) {
 	ros::start(); // explicitly needed since our nodehandle is going out of scope.
 	ros::NodeHandle n;
 	// Add your ros communications here.
-	vehicleA_ctrl_pub = n.advertise<VehicleModelInput>("vehicleA/vehicle_model/input", 1000);
-	vehicleB_ctrl_pub = n.advertise<VehicleModelInput>("vehicleB/vehicle_model/input", 1000);
+	vehicleA_ctrl_pub = n.advertise<VehicleModelInput>("vehicleA/cav_vehicle_model/input", 1000);
+	vehicleB_ctrl_pub = n.advertise<VehicleModelInput>("vehicleB/cav_vehicle_model/input", 1000);
 	start();
 	return true;
 }
