@@ -7,6 +7,8 @@ find_package(catkin REQUIRED COMPONENTS
   solver_msgs
   cav_vehicle_model_msgs
   computation_msgs
+  autoware_msgs
+  cooperative_msgs
 )
 
 
@@ -27,6 +29,7 @@ generate_messages(
   solver_msgs
   cav_vehicle_model_msgs
   computation_msgs
+  autoware_msgs
 )
 
 catkin_package(
@@ -35,4 +38,5 @@ catkin_package(
   std_msgs
   solver_msgs
   cav_vehicle_model_msgs
+  autoware_msgs
 )

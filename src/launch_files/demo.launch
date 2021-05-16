@@ -9,7 +9,7 @@
   <node type="cavpsim_gui" name="cavpsim_gui" pkg="cavpsim_gui" output="screen"/>
   <include file="$(find cavpsim_clock_server)/launch/default.launch"/> 
 
-  <include file="$(find vehicle_model)/launch/vehicle_model.launch">
+  <include file="$(find cav_vehicle_model)/launch/cav_vehicle_model.launch">
     <arg name="L" value="4.6"/>
     <arg name="m" value="6200"/>
     <arg name="R" value="0.29"/>
@@ -18,14 +18,14 @@
     <arg name="Im_e" value="0.3"/>
     <arg name="Im_t" value="0.3"/>
     <arg name="Im_w" value="0.3"/>
-    <arg name="initial_x" value="40.55"/>
+    <arg name="initial_x" value="50.55"/>
     <arg name="initial_y" value="-56.882"/>
     <arg name="initial_heading" value="1.47"/>
     <arg name="initial_speed" value="0.0"/>
     <arg name="vehicle_namespace" value="$(arg _vehicleA_namespace)"/>
   </include> 
 
-  <include file="$(find vehicle_model)/launch/vehicle_model.launch">
+  <include file="$(find cav_vehicle_model)/launch/cav_vehicle_model.launch">
     <arg name="L" value="4.6"/>
     <arg name="m" value="8000"/>
     <arg name="R" value="0.29"/>
@@ -58,16 +58,37 @@
 
   <include file="$(find computation_model)/launch/default.launch">
     <arg name="computation_namespace" value="$(arg _vehicleA_namespace)"/>
+    <arg name="rx_com_topic" value="/vehicleB/rx_com"/>
   </include> 
 
   <include file="$(find computation_model)/launch/default.launch">
     <arg name="computation_namespace" value="$(arg _vehicleB_namespace)"/>
+    <arg name="rx_com_topic" value="/vehicleA/rx_com"/>
   </include> 
+
+  <include file="$(find op_global_planner)/launch/op_global_planner.launch">
+    <arg name="planner_namespace" value="$(arg _vehicleA_namespace)"/>
+    <remap from="/current_pose" to="/$(arg _vehicleA_namespace)/current_pose"/>
+    <remap from="/current_velocity" to="/$(arg _vehicleA_namespace)/current_velocity"/>
+    <remap from="/initialpose" to="/$(arg _vehicleA_namespace)/initialpose"/>
+  </include> 
+
+  <include file="$(find op_global_planner)/launch/op_global_planner.launch">
+    <arg name="planner_namespace" value="$(arg _vehicleB_namespace)"/>
+    <remap from="/vehicleB/current_pose" to="/vehicleB/cav_vehicle_model/current_pose"/>
+    <remap from="/current_velocity" to="/$(arg _vehicleB_namespace)/current_velocity"/>
+    <remap from="/initialpose" to="/$(arg _vehicleB_namespace)/initialpose"/>
+  </include>
   
   <include file="$(find map_file)/launch/points_map_loader.launch" ns="PCDLoader">
     <arg name="path_pcd" default='"$(env HOME)/CAVPsim/src/enviornment/map/PCD/test.pcd"' />
   </include>
 
+  <include file="$(find map_file)/launch/vector_map_loader.launch">
+    <arg name="path_vector" default='$(env HOME)/CAVPsim/src/enviornment/map/vector/' />
+  </include>
+
+  <node type="static_transform_publisher" name="world_to_map" pkg="tf" output="screen" args="0 0 0 0 0 0 1 world map 10" />
   <node type="static_transform_publisher" name="map_to_odom" pkg="tf" output="screen" args="0 0 0 0 0 0 1 map odom 10" />
   <node type="rviz" name="rviz" pkg="rviz" output="screen" args="-d $(env HOME)/CAVPsim/src/tools/rviz/default.rviz" />
 

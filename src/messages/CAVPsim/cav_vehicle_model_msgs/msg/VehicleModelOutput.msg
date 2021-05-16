@@ -1,0 +1,5 @@
+std_msgs/Header header
+VehicleStates vehicle_states
+VehicleControlSignals vehicle_control_signals
+geometry_msgs/Pose pose
+float64 fuel_cost

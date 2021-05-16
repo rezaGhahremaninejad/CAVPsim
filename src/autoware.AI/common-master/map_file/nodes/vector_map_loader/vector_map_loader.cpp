@@ -1117,6 +1117,7 @@ int main(int argc, char **argv)
       std::string file_path = map_dir;
       file_path.append(file_name);
       file_paths.push_back(file_path);
+      std::cout << "--------------VECTOR PATHS:"  <<  file_paths[0] << std::endl;
     }
   }
   else if (load_mode == LoadMode::FILE)

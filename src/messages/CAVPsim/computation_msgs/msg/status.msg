@@ -1,0 +1,7 @@
+std_msgs/Header header
+float64 batch_size
+float64 t_op
+float64 app_flo
+float64 execution_time
+float64 required_flops
+float64 machine_availabel_flops

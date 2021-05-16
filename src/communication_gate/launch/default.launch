@@ -15,7 +15,9 @@
     <param name="Im_w" value='0.3' /> 
 
     <remap from="/computation/status" to="computation/status"/>
-    <remap from="/cav_vehicle_model/output" to="cav_vehicle_model/output"/> -->
+    <remap from="/cav_vehicle_model/output" to="cav_vehicle_model/output"/>
+    <remap from="/lane_waypoints_array" to="/$(arg communication_namespace)/lane_waypoints_array"/>
+    <remap from="/computation/cooperation_status" to="/$(arg communication_namespace)/computation/cooperation_status"/>
   </node>
 
   <!--<node pkg="cav_vehicle_model" type="model" name="model" ns="vehicleB" output="screen">

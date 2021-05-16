@@ -1,0 +1,8 @@
+std_msgs/Header header
+time vehicle_output_rx_timeStamp
+time vehicle_output_tx_timeStamp
+time vehicle_input_rx_timeStamp
+time vehicle_input_tx_timeStamp
+float64 total_delay_sec
+float64 delay_sec
+float64 missed_msgs

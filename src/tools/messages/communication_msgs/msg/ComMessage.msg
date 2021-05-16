@@ -1,3 +1,0 @@
-std_msgs/Header header
-computation_msgs/status computation_status
-cav_vehicle_model_msgs/VehicleModelOutput cav_vehicle_model_out
