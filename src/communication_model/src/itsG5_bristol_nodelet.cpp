@@ -24,7 +24,7 @@ namespace communication_model
     class itsg5_bristol : public nodelet::Nodelet
     {
     public:
-        itsg5_bristol() : BAND_WIDTH(6), MESSAGE_RATE(0.2), PROC_DELAY_MEAN_SEC(0.12), PROC_DELAY_DEV_SEC(0.02), idx(0) {}
+        itsg5_bristol() : BAND_WIDTH(6), MESSAGE_RATE(0.1), PROC_DELAY_MEAN_SEC(0), PROC_DELAY_DEV_SEC(0), idx(0) {}
         ~itsg5_bristol() {}
 
         // ros::CallbackQueue &callback_queue = getMTCallbackQueue();
@@ -42,24 +42,8 @@ namespace communication_model
         virtual void onInit()
         {
             ros::NodeHandle &private_nh = getPrivateNodeHandle();
-
-            // ros::CallbackQueue callback_queue;
-
-            // private_nh.setCallbackQueue(&callback_queue);
-            // ros::NodeHandle &private_nh = getMTPrivateNodeHandle();
-
-            // private_nh.getParam("CONTROLLER", CONTROLLER);
-
-            // v01_Rx_sim_pub = private_nh.advertise<communication_msgs::BristolRx>("v01_Rx_sim", 1000);
             rx_com_pub = private_nh.advertise<communication_msgs::ComMessage>("/rx_com", 1000);
-            // v00_Tx_sub = private_nh.subscribe("/v00_Tx_broadcast_0_215_215", 1000, &itsg5_bristol::input_rxCallback, this);
             tx_com_sub = private_nh.subscribe("/tx_com", 1000, &itsg5_bristol::comMessageCallback, this);
-            // callback_queue.callOne(ros::WallDuration(1.0)); // can also be callAvailable()
-            // callback_queue.callAvailable(ros::WallDuration()); // can also be callAvailable()
-            // ops.template init<communication_msgs::BristolTx>("/v00_Tx_broadcast_0_215_215", 1000, &itsg5_bristol::input_rxCallback, this);
-            // ops.transport_hints = ros::TransportHints();
-            // ops.allow_concurrent_callbacks = true;
-            // v00_Tx_sub = private_nh.subscribe(ops);
         }
 
         // static void *msg_proc(void *threadid, float PROC_DELAY_MEAN_SEC,
@@ -178,6 +162,9 @@ namespace communication_model
             
             if (p <= static_cast<float>(rand()) / static_cast<float>(RAND_MAX))
             {
+            
+            
+                // ROS_INFO("----------------------------OK TO SEND");
                 //ROS_INFO("----------AFTER SeqNum: %i", _Tx_Buffer[i].SeqNum);
                 //_v01_Rx_sim.header.stamp = ros::Time::now();
 
@@ -191,6 +178,7 @@ namespace communication_model
                 ros::Duration(PROC_DELAY_SEC).sleep();
 
                 // _rx_com.header = args->msg.header;
+                // _rx_com.header.stamp = ros::Time::now();
                 // _rx_com.header.stamp = args->msg.header.stamp - ros::Duration(PROC_DELAY_SEC);
                 // _v01_Rx_sim.header.stamp = args->msg.header.stamp;
                 // _v01_Rx_sim.header.stamp.secs = _v01_Rx_sim.header.stamp.secs + int(tr_rate.toSec());
@@ -229,7 +217,13 @@ namespace communication_model
             struct mt_args args;
             args.PROC_DELAY_MEAN_SEC = PROC_DELAY_MEAN_SEC;
             args.PROC_DELAY_DEV_SEC = PROC_DELAY_DEV_SEC;
-            args.msg = msg;
+            args.msg.cav_vehicle_model_out = msg.cav_vehicle_model_out;
+            args.msg.computation_status = msg.computation_status;
+            args.msg.ego_path = msg.ego_path;
+            args.msg.ego_status = msg.ego_status;
+            args.msg.msg_source = msg.msg_source;
+            args.msg.participants_status = msg.participants_status;
+            args.msg.header.stamp = ros::Time::now();
             args.BAND_WIDTH = BAND_WIDTH;
             args.MESSAGE_RATE = MESSAGE_RATE;
             args.rx_com_pub = rx_com_pub;
