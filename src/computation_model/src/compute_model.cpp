@@ -70,7 +70,9 @@ void rxCallback(const communication_msgs::ComMessage::ConstPtr &msg)
                     }
                 } 
             }
-        } else {std::cout << "------msg->ego_path.lanes.size(): " << std::to_string(msg->ego_path.lanes.size()) << std::endl;}
+        } else {
+            // std::cout << "------msg->ego_path.lanes.size(): " << std::to_string(msg->ego_path.lanes.size()) << std::endl;
+        }
     }
 }
 
@@ -95,7 +97,7 @@ int main(int argc, char **argv)
     ros::Subscriber computation_sub = n.subscribe("/rx_com", 1000, rxCallback);
     ros::Subscriber ego_path_sub = n.subscribe("/lane_waypoints_array", 1000, egoPathCallback);
 
-    ros::Rate loop_rate(1000);
+    ros::Rate loop_rate(10);
     LOOP_REPS = app_flo*batch_size;
 
     cooperation_status.header.stamp = ros::Time::now();
@@ -104,7 +106,7 @@ int main(int argc, char **argv)
     while (ros::ok())
     {
         ros::spinOnce();
-
+        cooperation_status.header.stamp = ros::Time::now();
         cooperation_status_pub.publish(cooperation_status);
 
 
@@ -164,6 +166,7 @@ int main(int argc, char **argv)
         comp_status.machine_availabel_flops = flops;
         //ros::Duration d(delay_sec);
         status_pub.publish(comp_status);
+        // updated_lane_waypoints.header.stamp = ros::Time::now();
         updated_lane_pub.publish(updated_lane_waypoints);
         
         seq = seq + 1;
