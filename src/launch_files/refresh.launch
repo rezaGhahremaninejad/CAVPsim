@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<launch>
+
+  <!-- COMMON ARGs -->
+  <arg name="dt" value="0.001"/>
+  <arg name="_vehicleA_namespace" value="vehicleA"/>
+  <arg name="_vehicleB_namespace" value="vehicleB"/>
+
+  <include file="$(find cav_vehicle_model)/launch/cav_vehicle_model.launch">
+    <arg name="L" value="4.6"/>
+    <arg name="m" value="6200"/>
+    <arg name="R" value="0.29"/>
+    <arg name="I_d" value="0.3"/>
+    <arg name="I_g" value="0.3"/>
+    <arg name="Im_e" value="0.3"/>
+    <arg name="Im_t" value="0.3"/>
+    <arg name="Im_w" value="0.3"/>
+    <arg name="initial_x" value="45.989"/>
+    <arg name="initial_y" value="-6.228"/>
+    <arg name="initial_heading" value="1.718"/>
+    <arg name="initial_speed" value="0.0"/>
+    <arg name="vehicle_namespace" value="$(arg _vehicleA_namespace)"/>
+  </include> 
+
+  <include file="$(find cav_vehicle_model)/launch/cav_vehicle_model.launch">
+    <arg name="L" value="4.6"/>
+    <arg name="m" value="8000"/>
+    <arg name="R" value="0.29"/>
+    <arg name="I_d" value="0.3"/>
+    <arg name="I_g" value="0.3"/>
+    <arg name="Im_e" value="0.3"/>
+    <arg name="Im_t" value="0.3"/>
+    <arg name="Im_w" value="0.3"/>
+    <arg name="initial_x" value="49.382"/>
+    <arg name="initial_y" value="4.595"/>
+    <arg name="initial_heading" value="0.099"/>
+    <arg name="initial_speed" value="0.0"/>
+    <arg name="vehicle_namespace" value="$(arg _vehicleB_namespace)"/>
+  </include> 
+
+</launch>
