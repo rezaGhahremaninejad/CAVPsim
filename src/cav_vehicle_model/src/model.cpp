@@ -110,12 +110,15 @@ int main(int argc, char **argv)
             output.header.stamp = odometry_msg.header.stamp;
 
             // REF: https://www.coursera.org/lecture/intro-self-driving-cars/lesson-4-longitudinal-vehicle-modeling-V8htX
-            float R_x = 0.1 * m * abs(x_4);   // Rolling resistan force N
-            float F_aero = 0.1 * pow(x_4, 2); // Rolling resistan force N
+            // float R_x = 0.01 * m * abs(x_4);   // Rolling resistan force N
+            float R_x = 440;   // Rolling resistan force N average cars
+            float F_aero = 0.1 * pow(x_4, 2); // Air resistan force N
             float F_load = F_aero + R_x;
             float je = Im_e + Im_t + Im_w * pow(GR, 2) + m * pow(GR, 2) * pow(R, 2);
             float dwheel_rot = (u - GR * R * F_load) / je;
+            // std::cout << "-------R_x): " << R_x << std::endl;
             output.vehicle_states.x_5 = R * GR * dwheel_rot; //acceleration m/s^2
+            std::cout << "-------x_5): " << x_5 << std::endl;
             output.vehicle_states.x_7 = x_7 + dt * w;        //front wheel angle
             output.vehicle_states.x_6 = atan(tan(x_7) / L);  // rad
             output.vehicle_states.x_4 = x_4 + dt * output.vehicle_states.x_5;
