@@ -3,16 +3,16 @@
 
   <arg name="L" default="2.7"/>
   <arg name="m" default="1200"/>
-  <arg name="dt" default="0.001"/>
+  <arg name="dt" default="0.1"/>
   <arg name="R" default="0.19"/>
   <arg name="I_d" default="0.3"/>
   <arg name="I_g" default="0.3"/>
-  <arg name="Im_e" default="0.3"/>
-  <arg name="Im_t" default="0.3"/>
-  <arg name="Im_w" default="0.3"/>
-  <arg name="initial_x" default="0.3"/>
-  <arg name="initial_y" default="0.3"/>
-  <arg name="initial_heading" default="0.05"/>
+  <arg name="Im_e" default="0.8"/>
+  <arg name="Im_t" default="0.8"/>
+  <arg name="Im_w" default="0.8"/>
+  <arg name="initial_x" default="0.0"/>
+  <arg name="initial_y" default="0.0"/>
+  <arg name="initial_heading" default="0"/>
   <arg name="initial_speed" default="0.0"/>
   <arg name="vehicle_namespace" default="vehicleA"/>
   

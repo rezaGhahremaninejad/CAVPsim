@@ -2,28 +2,31 @@
 <launch>
 
   <arg name="out_put_topic" default="out_put_topic"/>
-  <arg name="in_put_topic" default="in_put_topic"/>
-  <arg name="dt" default="0.001"/>
-  <arg name="T_1" default="10"/>
+  <arg name="in_put_topic" default="cav_vehicle_model/input"/>
+  <arg name="dt" default="0.1"/>
+  <arg name="T_1" default="2"/>
   <arg name="T_2" default="12"/>
-  <arg name="T_3" default="15"/>
-  <arg name="T_4" default="18"/>
-  <arg name="T_5" default="19"/>
-  <arg name="T_6" default="22"/>
-  <arg name="T_1_U" default="22"/>
-  <arg name="T_1_W" default="22"/>
-  <arg name="T_2_U" default="22"/>
-  <arg name="T_2_W" default="22"/>
-  <arg name="T_3_U" default="22"/>
-  <arg name="T_3_W" default="22"/>
-  <arg name="T_4_U" default="22"/>
-  <arg name="T_4_W" default="22"/>
-  <arg name="T_5_U" default="22"/>
-  <arg name="T_5_W" default="22"/>
-  <arg name="INITIAL_U" default="22"/>
-  <arg name="INITIAL_W" default="22"/>
-  <arg name="FINAL_U" default="22"/>
-  <arg name="FINAL_W" default="22"/>
+  <arg name="T_3" default="14"/>
+  <arg name="T_4" default="15"/>
+  <arg name="T_5" default="22"/>
+  <arg name="T_6" default="24"/>
+  <arg name="T_7" default="28"/>
+  <arg name="T_1_U" default="80"/>
+  <arg name="T_1_W" default="0"/>
+  <arg name="T_2_U" default="0"/>
+  <arg name="T_2_W" default="0.02"/>
+  <arg name="T_3_U" default="0"/>
+  <arg name="T_3_W" default="-0.02"/>
+  <arg name="T_4_U" default="30"/>
+  <arg name="T_4_W" default="0"/>
+  <arg name="T_5_U" default="0"/>
+  <arg name="T_5_W" default="0"/>
+  <arg name="T_6_U" default="-30"/>
+  <arg name="T_6_W" default="-0.02"/>
+  <arg name="INITIAL_U" default="0"/>
+  <arg name="INITIAL_W" default="0"/>
+  <arg name="FINAL_U" default="0"/>
+  <arg name="FINAL_W" default="0"/>
   <arg name="control_namespace" default="vehicleA"/>
 
   <node pkg="cav_vehicle_model" type="dummy_control" name="dummy_control" ns="$(arg control_namespace)" output="screen">
@@ -37,6 +40,7 @@
     <param name="T_4" value="$(arg T_4)" />
     <param name="T_5" value="$(arg T_5)" />
     <param name="T_6" value="$(arg T_6)" />
+    <param name="T_7" value="$(arg T_7)" />
     <param name="T_1_U" value='$(arg T_1_U)' />
     <param name="T_1_W" value='$(arg T_1_W)' />
     <param name="T_2_U" value='$(arg T_2_U)' />
@@ -47,6 +51,8 @@
     <param name="T_4_W" value='$(arg T_4_W)' />
     <param name="T_5_U" value='$(arg T_5_U)' />
     <param name="T_5_W" value='$(arg T_5_W)' />
+    <param name="T_6_U" value='$(arg T_6_U)' />
+    <param name="T_6_W" value='$(arg T_6_W)' />
     <param name="INITIAL_U" value="$(arg INITIAL_U)" />
     <param name="INITIAL_W" value="$(arg INITIAL_W)" />
     <param name="FINAL_U" value="$(arg FINAL_U)" />
