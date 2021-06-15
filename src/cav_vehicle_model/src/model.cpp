@@ -7,6 +7,16 @@
 #include <nav_msgs/Odometry.h>
 #include <visualization_msgs/Marker.h>
 #include <cmath>
+#include "vehicleModel.c"
+#include "vehicleModel_data.c"
+#include "rt_nonfinite.c"
+#include "rtGetNaN.c"
+#include "rtGetInf.c"
+#include "rt_defines.h"
+#include "rtmodel.h"
+// #include "rt_logging.c"
+#include "multiword_types.h"
+// #include "rt_malloc_main.c"
 
 float L, m, ga, dt, R, I_d, I_g, Im_e, Im_t, Im_w, GR, ideal_fuel_cost;
 float u, w;
@@ -21,6 +31,7 @@ int seq;
 float solver_time_step;
 std::string base_link;
 using namespace std;
+const char *RT_MEMORY_ALLOCATION_ERROR = "memory allocation error"; 
 
 void inputCallback(const cav_vehicle_model_msgs::VehicleModelInput::ConstPtr &msg)
 {
@@ -67,14 +78,6 @@ int main(int argc, char **argv)
     n.param<float>("model/initial_speed", x_4, 0.01);           // wheel rotation momentume
     n.param<std::string>("model/base_link", base_link, "base_link");           // wheel rotation momentume
 
-    //n.param<float>("GR", GR, 0.3);
-    GR = I_d * I_g;
-    B_1 = 1.1046 * 0.01 * I_d / R;
-    B_2 = -7.7511 * (pow(10, -5)) * (pow(I_d, 2)) / pow(R, 2);
-    B_3 = 1.6958 * (pow(10, -7)) * (pow(I_d, 3)) / pow(R, 3);
-    B_4 = 1.7363 * (pow(10, -5)) / R;
-    B_5 = 6.4277 * (pow(10, -8)) * I_d / pow(R, 2);
-    B_6 = 1.6088 * (pow(10, -7)) / (R * I_d);
     ros::Publisher ouput_pub = n.advertise<cav_vehicle_model_msgs::VehicleModelOutput>("/cav_vehicle_model/output", 1000);
     ros::Publisher nav_pub = n.advertise<nav_msgs::Odometry>("/cav_vehicle_model/odometry", 1000);
     ros::Subscriber input_sub = n.subscribe("/cav_vehicle_model/input", 1000, inputCallback);
@@ -90,12 +93,29 @@ int main(int argc, char **argv)
         dt = solver_time_step;
         ROS_INFO("########################y:");
     }
-    // for initialization
+    
+    
     msg_received = true;
+    auto _model = vehicleModel();
+
+    //initializing the vehicleModel:
+    vehicleModel_initialize(_model);
+    
     while (ros::ok())
     {
         ros::spinOnce();
-
+        _model->inputs->FwR = u;
+        _model->inputs->FwF = u;
+        _model->inputs->steeringRate = w;
+        vehicleModel_step(_model);
+        std::cout << "---------------------------------------------" << std::endl;
+        std::cout << "---_model->outputs->state[0]: " << _model->outputs->state[0] << std::endl;
+        std::cout << "---_model->outputs->state[1]: " << _model->outputs->state[1] << std::endl;
+        std::cout << "---_model->outputs->state[2]: " << _model->outputs->state[2] << std::endl;
+        std::cout << "---_model->outputs->stateDot[0]: " << _model->outputs->stateDot[0] << std::endl;
+        std::cout << "---_model->outputs->stateDot[1]: " << _model->outputs->stateDot[1] << std::endl;
+        std::cout << "---_model->outputs->stateDot[2]: " << _model->outputs->stateDot[2] << std::endl;
+        
         if (msg_received)
         {
             nav_msgs::Odometry odometry_msg;
@@ -109,30 +129,22 @@ int main(int argc, char **argv)
             // ROS_INFO("######################## Received message sequence: [%d]", seq);
             output.header.stamp = odometry_msg.header.stamp;
 
-            // REF: https://www.coursera.org/lecture/intro-self-driving-cars/lesson-4-longitudinal-vehicle-modeling-V8htX
-            // float R_x = 0.01 * m * abs(x_4);   // Rolling resistan force N
-            float R_x = 440;   // Rolling resistan force N average cars
-            float F_aero = 0.1 * pow(x_4, 2); // Air resistan force N
-            float F_load = F_aero + R_x;
-            float je = Im_e + Im_t + Im_w * pow(GR, 2) + m * pow(GR, 2) * pow(R, 2);
-            float dwheel_rot = (u - GR * R * F_load) / je;
-            // std::cout << "-------R_x): " << R_x << std::endl;
-            output.vehicle_states.x_5 = R * GR * dwheel_rot; //acceleration m/s^2
-            std::cout << "-------x_5): " << x_5 << std::endl;
-            output.vehicle_states.x_7 = x_7 + dt * w;        //front wheel angle
-            output.vehicle_states.x_6 = atan(tan(x_7) / L);  // rad
-            output.vehicle_states.x_4 = x_4 + dt * output.vehicle_states.x_5;
-            output.vehicle_states.x_3 = x_3 + dt * (1.0 / L) * output.vehicle_states.x_4 * sin(output.vehicle_states.x_6); //rad
-            output.vehicle_states.x_1 = x_1 + dt * output.vehicle_states.x_4 * cos(output.vehicle_states.x_3);
-            output.vehicle_states.x_2 = x_2 + dt * output.vehicle_states.x_4 * sin(output.vehicle_states.x_3);
-
-            x_1 = output.vehicle_states.x_1; //pos in x
-            x_2 = output.vehicle_states.x_2; //pos in y
-            x_3 = output.vehicle_states.x_3; //inertial heading rad
-            x_4 = output.vehicle_states.x_4; //speed m/s
-            x_5 = output.vehicle_states.x_5; // acceleration m/s^2
-            x_6 = output.vehicle_states.x_6; // slip angle, the angle of the current velocity of the center of mass with respec to thr longitudinal axis of the car
-            x_7 = output.vehicle_states.x_7; //steer wheel angle rad
+            x_1 = _model->outputs->state[0];     //pos in x
+            x_2 = _model->outputs->state[1];      //pos in y 
+            x_3 = _model->outputs->state[2]; //inertial heading rad
+            x_4 = pow(pow(_model->outputs->stateDot[0],2) 
+            + pow(_model->outputs->stateDot[1],2), 0.5); //speed m/s
+            // x_5 = output.vehicle_states.x_5; // acceleration m/s^2
+            // x_6 = output.vehicle_states.x_6; // slip angle, the angle of the current velocity of the center of mass with respec to thr longitudinal axis of the car
+            x_7 += w*dt; //steer wheel angle rad
+            
+            // x_1 = output.vehicle_states.x_1; //pos in x
+            // x_2 = output.vehicle_states.x_2; //pos in y
+            // x_3 = output.vehicle_states.x_3; //inertial heading rad
+            // x_4 = output.vehicle_states.x_4; //speed m/s
+            // x_5 = output.vehicle_states.x_5; // acceleration m/s^2
+            // x_6 = output.vehicle_states.x_6; // slip angle, the angle of the current velocity of the center of mass with respec to thr longitudinal axis of the car
+            // x_7 = output.vehicle_states.x_7; //steer wheel angle rad
 
             output.vehicle_control_signals.u = u;
             output.vehicle_control_signals.w = w;
@@ -148,9 +160,12 @@ int main(int argc, char **argv)
             current_pose_pub.publish(_pose_stamped);
 
             geometry_msgs::Twist twist;
-            twist.linear.x = x_4 * cos(x_3);
-            twist.linear.y = x_4 * sin(x_3);
-            twist.angular.z = (1.0 / L) * x_4 * sin(x_6);
+            twist.linear.x = _model->outputs->stateDot[0];
+            twist.linear.y = _model->outputs->stateDot[1];
+            // twist.linear.x = x_4 * cos(x_3);
+            // twist.linear.y = x_4 * sin(x_3);
+            // twist.angular.z = (1.0 / L) * x_4 * sin(x_6);
+            twist.angular.z = (1.0 / L) * x_4 * sin(x_3);
             geometry_msgs::TwistStamped _twist_stamped;
             _twist_stamped.header.stamp = ros::Time::now();
             _twist_stamped.twist = twist;

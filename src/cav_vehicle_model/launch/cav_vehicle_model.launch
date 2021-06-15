@@ -3,7 +3,7 @@
 
   <arg name="L" default="2.7"/>
   <arg name="m" default="1200"/>
-  <arg name="dt" default="0.1"/>
+  <arg name="dt" default="0.01"/>
   <arg name="R" default="0.19"/>
   <arg name="I_d" default="0.3"/>
   <arg name="I_g" default="0.3"/>
