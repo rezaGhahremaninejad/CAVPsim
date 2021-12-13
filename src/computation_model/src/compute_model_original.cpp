@@ -4,7 +4,7 @@
 #include <ctime>
 #include <cmath>
 
-double batch_size, t_op, app_flo;
+double batch_size, CAV_t_available, app_flo;
 rosgraph_msgs::Clock _clock;
 int seq;
 // #define LOOP_REPS 4294967295
@@ -21,7 +21,7 @@ int main(int argc, char **argv)
     ros::init(argc, argv, "compute_model");
     ros::NodeHandle n;
     n.param<double>("/compute_model/batch_size", batch_size, 10000);
-    n.param<double>("/compute_model/t_op", t_op, 0.01);
+    n.param<double>("/compute_model/CAV_t_available", CAV_t_available, 0.01);
     n.param<double>("/compute_model/app_flo", app_flo, 10000);
 
     ros::Publisher status_pub = n.advertise<computation_msgs::status>("/computation/status", 1000);
@@ -82,12 +82,12 @@ int main(int argc, char **argv)
         comp_status.header.seq = seq;
         // comp_status.header.stamp = t1;
         comp_status.batch_size = batch_size;
-        comp_status.t_op = t_op;
+        comp_status.CAV_t_available = CAV_t_available;
         comp_status.app_flo = app_flo;
         // comp_status.execution_time = (t1-t0).toNSec()/1000000000;
         comp_status.execution_time = fl_time;
-        comp_status.required_flops = app_flo*batch_size*t_op;
-        comp_status.machine_availabel_flops = flops;
+        comp_status.required_flops = app_flo*batch_size*CAV_t_available;
+        comp_status.CAV_flop = flops;
         //ros::Duration d(delay_sec);
         status_pub.publish(comp_status);
         seq = seq + 1;

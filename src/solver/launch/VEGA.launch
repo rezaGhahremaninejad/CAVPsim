@@ -3,7 +3,7 @@
   <arg name="computation_namespace" default="vehicleA"/>
   <arg name="rx_com_topic" default="/rx_com"/>
 
-  <node pkg="computation_model" type="compute_model" name="compute_model" ns="$(arg computation_namespace)" output="screen">
+  <node pkg="solver" type="solver_VEGA" name="solver_VEGA" ns="$(arg computation_namespace)" output="screen">
     <param name="batch_size" value='100' />
     <param name="CAV_t_available" value='0.01' />
     <param name="app_flo" value='1000' />

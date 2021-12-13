@@ -26,7 +26,7 @@ total_delay_sec = []
 missed_messages = []
 
 execution_time = []
-machine_availabel_flops = []
+CAV_flop = []
 
 vehicleA_seq = []
 vehicleB_seq = []
@@ -62,7 +62,7 @@ def compStatus_plot_x(msg):
     global thisTime
     dataReceived = True
     execution_time.append(msg.execution_time)
-    machine_availabel_flops.append(msg.machine_availabel_flops)
+    CAV_flop.append(msg.CAV_flop)
     time.append(1000*msg.header.stamp.secs + msg.header.stamp.nsecs/1000000)
     seq.append(msg.header.seq)
     thisTime = rospy.Time.now()
@@ -188,8 +188,8 @@ def plotter():
             #plt1.plot(time, execution_time, label=label_str)
 
             #plt1.title('Computation resource FLOPS / mseconds')
-            #label_str = 'average FLOPS: ' + str(sum(machine_availabel_flops)/len(machine_availabel_flops)) + ' FLOPS'
-            #plt1.plot(time, machine_availabel_flops, label=label_str)
+            #label_str = 'average FLOPS: ' + str(sum(CAV_flop)/len(CAV_flop)) + ' FLOPS'
+            #plt1.plot(time, CAV_flop, label=label_str)
 
             #plt1.title('Navigation cost m^2')
             #label_str = 'vehicleA navigation cost per solution step'

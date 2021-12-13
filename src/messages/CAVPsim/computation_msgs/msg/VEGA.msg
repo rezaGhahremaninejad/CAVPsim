@@ -1,9 +1,3 @@
-std_msgs/Header header
-float64 batch_size
-float64 app_flo
-float64 execution_time
-float64 required_flops
-
 int64 id                        # Agent unique 
 int64 CAV_flop                  # Available computer resources
 int64 CAV_t_available           # Estimated Available Time in the network scope in miliseconds
