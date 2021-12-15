@@ -50,18 +50,29 @@
   <!--   <doc_depend>doxygen</doc_depend> -->
   <buildtool_depend>catkin</buildtool_depend>
   <build_depend>cav_vehicle_model_msgs</build_depend>
+  <build_depend>autoware_msgs</build_depend>
   <build_depend>roscpp</build_depend>
   <build_depend>rospy</build_depend>
   <build_depend>solver_msgs</build_depend>
+  <build_depend>computation_msgs</build_depend>
+  <build_depend>cooperative_msgs</build_depend>
+  <build_depend>communication_msgs</build_depend>
   <build_export_depend>cav_vehicle_model_msgs</build_export_depend>
+  <build_export_depend>autoware_msgs</build_export_depend>
   <build_export_depend>roscpp</build_export_depend>
   <build_export_depend>rospy</build_export_depend>
   <build_export_depend>solver_msgs</build_export_depend>
+  <build_export_depend>computation_msgs</build_export_depend>
+  <build_export_depend>cooperative_msgs</build_export_depend>
+  <build_export_depend>communication_msgs</build_export_depend>
   <exec_depend>cav_vehicle_model_msgs</exec_depend>
+  <exec_depend>autoware_msgs</exec_depend>
   <exec_depend>roscpp</exec_depend>
   <exec_depend>rospy</exec_depend>
   <exec_depend>solver_msgs</exec_depend>
-
+  <exec_depend>computation_msgs</exec_depend>
+  <exec_depend>cooperative_msgs</exec_depend>
+  <exec_depend>communication_msgs</exec_depend>
 
   <!-- The export tag contains other, unspecified, tags -->
   <export>

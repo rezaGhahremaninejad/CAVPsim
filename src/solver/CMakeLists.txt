@@ -12,6 +12,10 @@ find_package(catkin REQUIRED COMPONENTS
   roscpp
   rospy
   solver_msgs
+  computation_msgs
+  autoware_msgs
+  cooperative_msgs
+  communication_msgs
 )
 
 ## System dependencies are found with CMake's conventions
@@ -203,6 +207,8 @@ include_directories(
 #   target_link_libraries(${PROJECT_NAME}-test ${PROJECT_NAME})
 add_executable(solver src/solver.cpp)
 target_link_libraries(solver ${catkin_LIBRARIES})
+add_executable(solver_VEGA src/solver_VEGA.cpp)
+target_link_libraries(solver_VEGA ${catkin_LIBRARIES})
 # endif()
 
 ## Add folders to be run by python nosetests
