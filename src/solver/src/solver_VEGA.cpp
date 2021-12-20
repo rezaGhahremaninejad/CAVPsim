@@ -4,6 +4,7 @@
 #include <ctime>
 #include "std_msgs/String.h"
 #include "computation_msgs/status.h"
+#include "computation_msgs/VEGA_stat.h"
 #include "autoware_msgs/LaneArray.h"
 #include "cooperative_msgs/status.h"
 #include "communication_msgs/ComMessage.h"
@@ -11,12 +12,13 @@
 
 cooperative_msgs::status _coop_status;
 computation_msgs::status _vega_status;
+computation_msgs::VEGA_stat _vega_stat;
 autoware_msgs::LaneArray _ego_path;
-ros::Publisher status_pub, cooperation_status_pub, updated_lane_pub;
+ros::Publisher status_pub, cooperation_status_pub, updated_lane_pub, vega_stat_pub;
 ros::Subscriber computation_sub, ego_path_sub;
 
 int FLOP_CALC_PERIOD_SEC;
-float t_min;    // Minimum time in msecond required a participant be available to contribute.
+int t_min;                        // Minimum time in msecond required a participant be available to contribute.
 float LAST_FLOP_CALC_TIME;
 int LOOP_REPS = 1000;
 int N_p = 100;
@@ -132,8 +134,9 @@ unsigned long calcThisCAV_flp() {
     return flops;
 }
 
-int calcThisCAV_t_available() {
-    return 5000;
+unsigned long calcThisCAV_t_available() {
+    unsigned long _res = 5000;
+    return _res;
 }
 
 void egoPathCallback(const autoware_msgs::LaneArray::ConstPtr &msg) {
@@ -186,59 +189,61 @@ int main(int argc, char **argv)
     ros::NodeHandle n;
 
     n.param<int>("/compute_model/FLOP_CALC_PERIOD_SEC", FLOP_CALC_PERIOD_SEC, 2);
-    n.param<int>("/compute_model/LOOP_REPS", LOOP_REPS, 100);
+    n.param<int>("/compute_model/LOOP_REPS", LOOP_REPS, 10000000);
     n.param<int>("/compute_model/N_p", N_p, 100);
     n.param<int>("/compute_model/APPCO", APPCO, 10);
     n.param<float>("/compute_model/c_vp_a", c_vp_a, 10);
     n.param<float>("/compute_model/c_vp_b", c_vp_b, 10);
     n.param<float>("/compute_model/c_ap_a", c_ap_a, 10);
     n.param<float>("/compute_model/c_ap_b", c_ap_b, 10);
+    n.param<int>("/compute_model/t_min", t_min, 1000);
 
     status_pub = n.advertise<computation_msgs::status>("/computation/status", 1000);
+    vega_stat_pub = n.advertise<computation_msgs::VEGA_stat>("/computation/VEGA_stat", 1000);
     cooperation_status_pub = n.advertise<cooperative_msgs::status>("/computation/cooperation_status", 1000);
     updated_lane_pub = n.advertise<autoware_msgs::LaneArray>("/computation/updated_lane_waypoints_array", 1000);
     computation_sub = n.subscribe("/rx_com", 1000, rxCallback);
     ego_path_sub = n.subscribe("/lane_waypoints_array", 1000, egoPathCallback);
     _vega_status.id = 1;
     _vega_status.IS_LEADER = false;
-    _vega_status.CAV_flop = calcThisCAV_flp();
-    _vega_status.CAV_t_available = calcThisCAV_t_available();
-    _vega_status.CAV_total_flop = _vega_status.CAV_flop;
-    LAST_FLOP_CALC_TIME = ros::Time::now().toSec();
+    _vega_status.CAV_total_flop = calcThisCAV_flp();
 
     ros::Rate loop_rate(50);
 
     while (ros::ok())
     {
-        if (LAST_FLOP_CALC_TIME + FLOP_CALC_PERIOD_SEC < ros::Time::now().toSec()) {
-            std::cout << "------HERE" << std::endl;
-            LAST_FLOP_CALC_TIME = ros::Time::now().toSec();
-            _vega_status.CAV_flop = calcThisCAV_flp();
-            _vega_status.CAV_t_available = calcThisCAV_t_available();
-        }
+        _vega_status.CAV_flop = calcThisCAV_flp();
+        std::cout << "------: _vega_status.CAV_flop: " << _vega_status.CAV_flop << std::endl;
+        _vega_status.CAV_t_available = calcThisCAV_t_available();
+        // std::cout << "------: _vega_status.CAV_t_available: " << _vega_status.CAV_t_available << std::endl;
+        // std::cout << "------: _1: " << N_p*_vega_status.CAV_flop*_vega_status.CAV_t_available << std::endl;
+        // std::cout << "------: _2: " << APPCO*_vega_status.CAV_total_flop*t_min << std::endl;
+        _vega_stat.N_i = (N_p*_vega_status.CAV_flop*_vega_status.CAV_t_available) / (APPCO*_vega_status.CAV_total_flop*t_min);
+        std::cout << "------: _1/2: " << _vega_stat.N_i << std::endl;
+        // _vega_status.CAV_t_available = 200;
+        // }
 
         // RAD-VEGA Step 1:
         POPULATION _population;
         for (int i = 0; i < (N_p*_vega_status.CAV_flop*_vega_status.CAV_t_available) / (APPCO*_vega_status.CAV_total_flop*t_min); i++) {
             SOLUTION _tmp_sol;
-            autoware_msgs::Waypoint _tmp_waypoint_A = _solution._vehicle_A.lanes[0].waypoints[i];
-            autoware_msgs::Waypoint _tmp_waypoint_B = _solution._vehicle_B.lanes[0].waypoints[i];
-            // _ego_path.lanes[0].waypoints[j].twist.twist.linear.x 
-            for (auto wayPoint : _solution._vehicle_A.lanes[0].waypoints) {
-                wayPoint.twist.twist.linear.x = wayPoint.twist.twist.linear.x + RAND(0.01, -0.5);
-                _tmp_sol._vehicle_A.lanes[0].waypoints.push_back(wayPoint);
-            }
+            while(_solution._vehicle_A.lanes.size() != 0) {
+                for (auto wayPoint : _solution._vehicle_A.lanes[0].waypoints) {
+                    wayPoint.twist.twist.linear.x = wayPoint.twist.twist.linear.x + RAND(0.01, -0.5);
+                    _tmp_sol._vehicle_A.lanes[0].waypoints.push_back(wayPoint);
+                }
 
-            for (auto wayPoint : _solution._vehicle_B.lanes[0].waypoints) {
-                wayPoint.twist.twist.linear.x = wayPoint.twist.twist.linear.x + RAND(0.01, -0.5);
-                _tmp_sol._vehicle_B.lanes[0].waypoints.push_back(wayPoint);
-            }
+                for (auto wayPoint : _solution._vehicle_B.lanes[0].waypoints) {
+                    wayPoint.twist.twist.linear.x = wayPoint.twist.twist.linear.x + RAND(0.01, -0.5);
+                    _tmp_sol._vehicle_B.lanes[0].waypoints.push_back(wayPoint);
+                }
 
-            _population._solution.push_back(_tmp_sol);
+                _population._solution.push_back(_tmp_sol);
+            }
         }
 
         // RAD-VEGA Step 2:
-        // VEGA STEP 1: M = 3 (We are considering three objectives:
+        // VEGA STEP 1: M = 2 (We are considering two objectives:
         // reduction in both collision avoidance risk and power consumption and navigation desire)
         int q = _population._solution.size() / 2;
         std::vector<float> _fitness;
@@ -251,6 +256,7 @@ int main(int argc, char **argv)
         propSelection(_fitness, _population);
         status_pub.publish(_vega_status);
         cooperation_status_pub.publish(_coop_status);
+        vega_stat_pub.publish(_vega_stat);
         ros::spinOnce();
         //ros::spin();
         loop_rate.sleep();

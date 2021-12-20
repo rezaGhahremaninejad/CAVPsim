@@ -9,6 +9,7 @@
     <param name="app_flo" value='1000' />
 
     <remap from="/computation/status" to="/$(arg computation_namespace)/computation/status"/>
+    <remap from="/computation/VEGA_stat" to="/$(arg computation_namespace)/computation/VEGA_stat"/>
     <remap from="/computation/cooperation_status" to="/$(arg computation_namespace)/computation/cooperation_status"/>
     <remap from="/computation/updated_lane_waypoints_array" to="/$(arg computation_namespace)/computation/updated_lane_waypoints_array"/>
     <remap from="/lane_waypoints_array" to="/$(arg computation_namespace)/lane_waypoints_array"/>
