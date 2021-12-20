@@ -212,6 +212,7 @@ int main(int argc, char **argv)
     {
         if (LAST_FLOP_CALC_TIME + FLOP_CALC_PERIOD_SEC < ros::Time::now().toSec()) {
             std::cout << "------HERE" << std::endl;
+            LAST_FLOP_CALC_TIME = ros::Time::now().toSec();
             _vega_status.CAV_flop = calcThisCAV_flp();
             _vega_status.CAV_t_available = calcThisCAV_t_available();
         }
