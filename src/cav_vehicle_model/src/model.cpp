@@ -20,6 +20,7 @@
 
 float L, m, ga, dt, R, I_d, I_g, Im_e, Im_t, Im_w, GR, ideal_fuel_cost;
 float u, w;
+float x_1_init, x_2_init, x_3_init;
 float x_1, x_2, x_3, x_4, x_5, x_6, x_7;
 float B_1, B_2, B_3, B_4, B_5, B_6;
 float rolling_res_force;
@@ -60,23 +61,23 @@ int main(int argc, char **argv)
 {
     ros::init(argc, argv, "model");
     ros::NodeHandle n;
-    n.param<float>("model/L", L, 2.7);                             //wheelbase
-    n.param<float>("model/m", m, 1200);                            // mass
-    n.param<float>("model/dt", dt, 0.01);                           // sampling time
-    n.param<float>("model/R", R, 0.19);                            //  effective redius
-    n.param<float>("model/I_d", I_d, 0.3);                         // differential ratio
-    n.param<float>("model/I_g", I_g, 0.3);                         // gear ratio
-    n.param<float>("model/Im_e", Im_e, 0.3);                       // engine rotation momentume
-    n.param<float>("model/Im_t", Im_t, 0.3);                       // turbine rotation momentume
-    n.param<float>("model/Im_w", Im_w, 0.3);                       // wheel rotation momentume
-    n.param<float>("model/solver_time_step", solver_time_step, 0.1); // wheel rotation momentume
-    n.param<bool>("model/solver_req", solver_req, true);           // wheel rotation momentume
-    n.param<float>("model/ideal_fuel_cost", ideal_fuel_cost, 0.01);           // wheel rotation momentume
-    n.param<float>("model/initial_x", x_1, 0.01);           // wheel rotation momentume
-    n.param<float>("model/initial_y", x_2, 0.01);           // wheel rotation momentume
-    n.param<float>("model/initial_heading", x_3, 0.01);           // wheel rotation momentume
-    n.param<float>("model/initial_speed", x_4, 0.01);           // wheel rotation momentume
-    n.param<std::string>("model/base_link", base_link, "base_link");           // wheel rotation momentume
+    n.param<float>("model/L", L, 2.7);                                  // wheelbase
+    n.param<float>("model/m", m, 1200);                                 // mass
+    n.param<float>("model/dt", dt, 0.01);                               // sampling time
+    n.param<float>("model/R", R, 0.19);                                 // effective redius
+    n.param<float>("model/I_d", I_d, 0.3);                              // differential ratio
+    n.param<float>("model/I_g", I_g, 0.3);                              // gear ratio
+    n.param<float>("model/Im_e", Im_e, 0.3);                            // engine rotation momentume
+    n.param<float>("model/Im_t", Im_t, 0.3);                            // turbine rotation momentume
+    n.param<float>("model/Im_w", Im_w, 0.3);                            // wheel rotation momentume
+    n.param<float>("model/solver_time_step", solver_time_step, 0.1);    // time step
+    n.param<bool>("model/solver_req", solver_req, true);                // if solver requested 
+    n.param<float>("model/ideal_fuel_cost", ideal_fuel_cost, 0.01);     
+    n.param<float>("model/initial_x", x_1_init, 0.01);                  
+    n.param<float>("model/initial_y", x_2_init, 0.01);                  
+    n.param<float>("model/initial_heading", x_3_init, 0.01);            
+    n.param<float>("model/initial_speed", x_4, 0.01);                   
+    n.param<std::string>("model/base_link", base_link, "base_link");    
 
     ros::Publisher ouput_pub = n.advertise<cav_vehicle_model_msgs::VehicleModelOutput>("/cav_vehicle_model/output", 1000);
     ros::Publisher nav_pub = n.advertise<nav_msgs::Odometry>("/cav_vehicle_model/odometry", 1000);
@@ -108,13 +109,13 @@ int main(int argc, char **argv)
         _model->inputs->FwF = u;
         _model->inputs->steeringRate = w;
         vehicleModel_step(_model);
-        std::cout << "---------------------------------------------" << std::endl;
-        std::cout << "---_model->outputs->state[0]: " << _model->outputs->state[0] << std::endl;
-        std::cout << "---_model->outputs->state[1]: " << _model->outputs->state[1] << std::endl;
-        std::cout << "---_model->outputs->state[2]: " << _model->outputs->state[2] << std::endl;
-        std::cout << "---_model->outputs->stateDot[0]: " << _model->outputs->stateDot[0] << std::endl;
-        std::cout << "---_model->outputs->stateDot[1]: " << _model->outputs->stateDot[1] << std::endl;
-        std::cout << "---_model->outputs->stateDot[2]: " << _model->outputs->stateDot[2] << std::endl;
+        // std::cout << "---------------------------------------------" << std::endl;
+        // std::cout << "---_model->outputs->state[0]: " << _model->outputs->state[0] << std::endl;
+        // std::cout << "---_model->outputs->state[1]: " << _model->outputs->state[1] << std::endl;
+        // std::cout << "---_model->outputs->state[2]: " << _model->outputs->state[2] << std::endl;
+        // std::cout << "---_model->outputs->stateDot[0]: " << _model->outputs->stateDot[0] << std::endl;
+        // std::cout << "---_model->outputs->stateDot[1]: " << _model->outputs->stateDot[1] << std::endl;
+        // std::cout << "---_model->outputs->stateDot[2]: " << _model->outputs->stateDot[2] << std::endl;
         
         if (msg_received)
         {
@@ -129,14 +130,14 @@ int main(int argc, char **argv)
             // ROS_INFO("######################## Received message sequence: [%d]", seq);
             output.header.stamp = odometry_msg.header.stamp;
 
-            x_1 = _model->outputs->state[0];     //pos in x
-            x_2 = _model->outputs->state[1];      //pos in y 
-            x_3 = _model->outputs->state[2]; //inertial heading rad
+            x_1 = _model->outputs->state[0] + x_1_init;                        //pos in x
+            x_2 = _model->outputs->state[1] + x_2_init;                        //pos in y 
+            x_3 = _model->outputs->state[2] + x_3_init;                        //inertial heading rad
             x_4 = pow(pow(_model->outputs->stateDot[0],2) 
-            + pow(_model->outputs->stateDot[1],2), 0.5); //speed m/s
+            + pow(_model->outputs->stateDot[1],2), 0.5);            //speed m/s
             // x_5 = output.vehicle_states.x_5; // acceleration m/s^2
             // x_6 = output.vehicle_states.x_6; // slip angle, the angle of the current velocity of the center of mass with respec to thr longitudinal axis of the car
-            x_7 += w*dt; //steer wheel angle rad
+            x_7 += w*dt;                                            //steer wheel angle rad
             
             // x_1 = output.vehicle_states.x_1; //pos in x
             // x_2 = output.vehicle_states.x_2; //pos in y
