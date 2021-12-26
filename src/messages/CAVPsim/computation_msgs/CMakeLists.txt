@@ -5,6 +5,7 @@ find_package(catkin REQUIRED COMPONENTS
   message_generation
   std_msgs
   solver_msgs
+  autoware_msgs
 )
 
 
@@ -14,6 +15,8 @@ add_message_files(
   FILES
   status.msg
   VEGA_stat.msg
+  RAD_VEGA_POPULATION.msg
+  RAD_VEGA_SOLUTION.msg
 )
 
 ## Generate added messages and services with any dependencies listed here
@@ -21,7 +24,7 @@ generate_messages(
   DEPENDENCIES
   std_msgs
   solver_msgs
-
+  autoware_msgs
 )
 
 catkin_package(
@@ -29,5 +32,5 @@ catkin_package(
   message_runtime
   std_msgs
   solver_msgs
-
+  autoware_msgs
 )

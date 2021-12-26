@@ -1,0 +1,3 @@
+std_msgs/Header header
+autoware_msgs/LaneArray vehicleA
+autoware_msgs/LaneArray vehicleB

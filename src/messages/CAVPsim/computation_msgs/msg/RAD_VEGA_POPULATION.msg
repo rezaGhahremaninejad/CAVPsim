@@ -1,0 +1,1 @@
+RAD_VEGA_SOLUTION[] solution

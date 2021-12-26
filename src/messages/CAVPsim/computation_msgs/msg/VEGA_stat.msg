@@ -1,2 +1,13 @@
 std_msgs/Header header
-uint8 N_i 
+uint64 N_i
+autoware_msgs/LaneArray corrected_path_vehicleA
+autoware_msgs/LaneArray corrected_path_vehicleB
+autoware_msgs/LaneArray initial_path_vehicleA
+autoware_msgs/LaneArray initial_path_vehicleB 
+float64 initial_path_col_cost
+float64 initial_path_pow_cost
+float64 corrected_path_col_cost
+float64 corrected_path_pow_cost
+int32 partner_solution_population_size
+int32 this_solution_population_size
+int32 total_solution_population_size
