@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 2.8.3)
-project(solver)
+project(zdt_runner)
 
 ## Compile as C++11, supported in ROS Kinetic and newer
 # add_compile_options(-std=c++11)
@@ -8,14 +8,9 @@ project(solver)
 ## if COMPONENTS list like find_package(catkin REQUIRED COMPONENTS xyz)
 ## is used, also find other catkin packages
 find_package(catkin REQUIRED COMPONENTS
-  cav_vehicle_model_msgs
   roscpp
-  rospy
-  solver_msgs
-  computation_msgs
-  autoware_msgs
-  cooperative_msgs
   communication_msgs
+  computation_msgs
 )
 
 ## System dependencies are found with CMake's conventions
@@ -173,18 +168,7 @@ include_directories(
 ## See http://docs.ros.org/melodic/api/catkin/html/howto/format1/building_executables.html
 # install(TARGETS ${PROJECT_NAME}_node
 #   RUNTIME DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
-# )
-
-## Mark libraries for installation
-## See http://docs.ros.org/melodic/api/catkin/html/howto/format1/building_libraries.html
-# install(TARGETS ${PROJECT_NAME}
-#   ARCHIVE DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
-#   LIBRARY DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
-#   RUNTIME DESTINATION ${CATKIN_GLOBAL_BIN_DESTINATION}
-# )
-
-## Mark cpp header files for installation
-# install(DIRECTORY include/${PROJECT_NAME}/
+# )solver include/${PROJECT_NAME}/
 #   DESTINATION ${CATKIN_PACKAGE_INCLUDE_DESTINATION}
 #   FILES_MATCHING PATTERN "*.h"
 #   PATTERN ".svn" EXCLUDE
@@ -205,12 +189,8 @@ include_directories(
 # catkin_add_gtest(${PROJECT_NAME}-test test/test_solver.cpp)
 # if(TARGET ${PROJECT_NAME}-test)
 #   target_link_libraries(${PROJECT_NAME}-test ${PROJECT_NAME})
-add_executable(solver src/solver.cpp)
-target_link_libraries(solver ${catkin_LIBRARIES})
-add_executable(solver_VEGA src/solver_VEGA.cpp)
-target_link_libraries(solver_VEGA ${catkin_LIBRARIES})
-add_executable(ZDT_solver_VEGA src/ZDT_solver_VEGA.cpp)
-target_link_libraries(ZDT_solver_VEGA ${catkin_LIBRARIES})
+add_executable(zdt_init src/zdt_init.cpp)
+target_link_libraries(zdt_init ${catkin_LIBRARIES})
 # endif()
 
 ## Add folders to be run by python nosetests
