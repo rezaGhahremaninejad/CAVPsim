@@ -11,7 +11,8 @@
 #include "cooperative_msgs/status.h"
 #include "communication_msgs/ComMessage.h"
 #include "rosgraph_msgs/Clock.h"
-
+#include <iostream>
+#include <algorithm>
 cooperative_msgs::status _coop_status;
 computation_msgs::status _vega_status;
 computation_msgs::RAD_VEGA_POPULATION P_i, P_vehicleB;
@@ -27,7 +28,7 @@ float LAST_FLOP_CALC_TIME;
 int LOOP_REPS = 1000;
 int N_p = 100;
 int APPCO = 10;
-
+int MAX_POP_SIZE = 300;
 float c_vp_a, c_vp_b, c_ap_a, c_ap_b;
 
 using namespace std;
@@ -89,8 +90,8 @@ void propSelection(computation_msgs::RAD_VEGA_POPULATION _pop) {
     // initializing tmp vars:
     float _total_fitness = 0;
     float POP_PORP = 0.05;
-    int MAX_POP_SIZE =_pop.solution.size();
     float _tmp_min_fitness = 9999999;
+    float _last_tmp_min_fitness;
     int _min_fitness_idx = 0;
     for (int i = 0; i < _pop.solution.size(); i++) {
         if (i < _pop.solution.size()/2) {
@@ -129,42 +130,50 @@ void propSelection(computation_msgs::RAD_VEGA_POPULATION _pop) {
 
         // std::cout << "---------------------f1_total_fitness: " << _total_fitness << std::endl;
         // std::cout << "---------------------f1_tmp_min_fitness: " << _tmp_min_fitness << std::endl;
-        int _number_of_copies = 0;
-        _number_of_copies = round(POP_PORP*REMAINING_f1) + 1;
-        // std::cout << "---------------------f1_number_of_copies: " << _number_of_copies << std::endl;
-        // if (_tmp_min_fitness == 0 ) { _number_of_copies = round(POP_PORP*REMAINING_f1);} 
-        // else {
-        //     if (round(_total_fitness/(REMAINING_f1*_tmp_min_fitness)) < round(POP_PORP*REMAINING_f1)) 
-        //     {_number_of_copies = round(_total_fitness/(POP_PORP*REMAINING_f1*_tmp_min_fitness));}
-        //     else {_number_of_copies = round(POP_PORP*REMAINING_f1);}
-        // }
+        if (_tmp_min_fitness != _last_tmp_min_fitness) {
 
-        // if (_number_of_copies == 0) {
-        //     P_i.solution.push_back(P_i.solution[0]);
-        // }
+            int _number_of_copies = 0;
+            _number_of_copies = round(POP_PORP*REMAINING_f1);
+            // std::cout << "---------------------f1_number_of_copies: " << _number_of_copies << std::endl;
+            // if (_tmp_min_fitness == 0 ) { _number_of_copies = round(POP_PORP*REMAINING_f1);} 
+            // else {
+            //     if (round(_total_fitness/(REMAINING_f1*_tmp_min_fitness)) < round(POP_PORP*REMAINING_f1)) 
+            //     {_number_of_copies = round(_total_fitness/(POP_PORP*REMAINING_f1*_tmp_min_fitness));}
+            //     else {_number_of_copies = round(POP_PORP*REMAINING_f1);}
+            // }
 
-        for (int k = 0; k < _number_of_copies; k++) {
-            P_i.solution.push_back(_pop_f1.solution[_min_fitness_idx]);
+            // if (_number_of_copies == 0) {
+            //     P_i.solution.push_back(P_i.solution[0]);
+            // }
+
+            for (int k = 0; k < _number_of_copies; k++) {
+                P_i.solution.push_back(_pop_f1.solution[_min_fitness_idx]);
+            }
+
+            // REMAINING_f1 = MAX_POP_SIZE/2 - P_i.solution.size() - 1;
+            REMAINING_f1 = IT_COUNT_f1 - it;
         }
-
-        REMAINING_f1 = MAX_POP_SIZE/2 - P_i.solution.size() - 1;
         
         _fitness_f1.erase(_fitness_f1.begin() + _min_fitness_idx);
         _pop_f1.solution.erase(_pop_f1.solution.begin() + _min_fitness_idx);
+        _last_tmp_min_fitness = _tmp_min_fitness;
 
         // if (P_i.solution.size() >= MAX_POP_SIZE || IT_COUNT_f2 <= 0) {
-        if (P_i.solution.size() >= MAX_POP_SIZE/2) {
-            for (int i = MAX_POP_SIZE/2; i < P_i.solution.size(); i++) {
-                if (P_i.solution.size() != 2) {
-                    P_i.solution.pop_back();
-                } else {
-                    // break;
-                }
-            }
-            // break;
-        }
+        // if (P_i.solution.size() >= MAX_POP_SIZE/2) {
+        //     for (int i = MAX_POP_SIZE/2; i < P_i.solution.size(); i++) {
+        //         if (P_i.solution.size() != 2) {
+        //             P_i.solution.pop_back();
+        //         } else {
+        //             // break;
+        //         }
+        //     }
+        //     // break;
+        // }
     } 
 
+    while(P_i.solution.size() > MAX_POP_SIZE/2) {
+        P_i.solution.pop_back();
+    }
     // if (P_i.solution.size() < _pop_f1.solution.size()) {
     //     for (int i = 0; i < _pop_f1.solution.size() - P_i.solution.size(); i++) {
     //         P_i.solution.push_back(P_i.solution[0]);
@@ -178,7 +187,7 @@ void propSelection(computation_msgs::RAD_VEGA_POPULATION _pop) {
     
 
     // std::cout << "---------------------f1_P_i.solution.size(): " << P_i.solution.size() << std::endl;
-
+    _last_tmp_min_fitness = 0;
     int _current_p_i_size = P_i.solution.size();
 
     for (int it = 0; it < IT_COUNT_f2; it++) {
@@ -201,43 +210,51 @@ void propSelection(computation_msgs::RAD_VEGA_POPULATION _pop) {
         //     std::cout << "---------------------f2_tmp_min_fitness: " << _tmp_min_fitness << std::endl;
         // }
 
+        if (_tmp_min_fitness != _last_tmp_min_fitness) {
 
-        int _number_of_copies = 0;
-        _number_of_copies = round(POP_PORP*REMAINING_f2) + 1;
-        // std::cout << "---------------------f2_number_of_copies: " << _number_of_copies << std::endl;
-        // if (_tmp_min_fitness == 0 ) { _number_of_copies = round(POP_PORP*REMAINING_f2);} 
-        // else {
-        //     if (round(_total_fitness/(REMAINING_f2*_tmp_min_fitness)) < round(POP_PORP*REMAINING_f2)) 
-        //     {_number_of_copies = round(_total_fitness/(POP_PORP*REMAINING_f2*_tmp_min_fitness));}
-        //     else {_number_of_copies = round(POP_PORP*REMAINING_f2);}
-        // }
+            int _number_of_copies = 0;
+            _number_of_copies = round(POP_PORP*REMAINING_f2);
+            // std::cout << "---------------------f2_number_of_copies: " << _number_of_copies << std::endl;
+            // if (_tmp_min_fitness == 0 ) { _number_of_copies = round(POP_PORP*REMAINING_f2);} 
+            // else {
+            //     if (round(_total_fitness/(REMAINING_f2*_tmp_min_fitness)) < round(POP_PORP*REMAINING_f2)) 
+            //     {_number_of_copies = round(_total_fitness/(POP_PORP*REMAINING_f2*_tmp_min_fitness));}
+            //     else {_number_of_copies = round(POP_PORP*REMAINING_f2);}
+            // }
 
-        // if (_number_of_copies == 0) {
-        //     P_i.solution.push_back(P_i.solution[0]);
-        // }
+            // if (_number_of_copies == 0) {
+            //     P_i.solution.push_back(P_i.solution[0]);
+            // }
 
-        for (int k = 0; k < _number_of_copies; k++) {
-            P_i.solution.push_back(_pop_f2.solution[_min_fitness_idx]);
+            for (int k = 0; k < _number_of_copies; k++) {
+                P_i.solution.push_back(_pop_f2.solution[_min_fitness_idx]);
+            }
+
+            // std::cout << "---f2__number_of_copies: " << _number_of_copies << std::endl;
+
+            // REMAINING_f2 = MAX_POP_SIZE/2 - P_i.solution.size() + _current_p_i_size - 1;
+            REMAINING_f2 = IT_COUNT_f2 - it;
+
         }
-
-        // std::cout << "---f2__number_of_copies: " << _number_of_copies << std::endl;
-
-        REMAINING_f2 = MAX_POP_SIZE/2 - P_i.solution.size() + _current_p_i_size - 1;
-
         _fitness_f2.erase(_fitness_f2.begin() + _min_fitness_idx);
         _pop_f2.solution.erase(_pop_f2.solution.begin() + _min_fitness_idx);
+        _last_tmp_min_fitness = _tmp_min_fitness;
 
         // if (P_i.solution.size() >= MAX_POP_SIZE/2 || IT_COUNT_f2 <= 0) {
-        if (P_i.solution.size() >= MAX_POP_SIZE) {
-            for (int i = MAX_POP_SIZE; i < P_i.solution.size(); i++) {
-                if (P_i.solution.size() != 1) {
-                    P_i.solution.pop_back();
-                } else {
-                    // break;
-                }
-            }
-        }
+        // if (P_i.solution.size() >= MAX_POP_SIZE) {
+        //     for (int i = MAX_POP_SIZE; i < P_i.solution.size(); i++) {
+        //         if (P_i.solution.size() != 1) {
+        //             P_i.solution.pop_back();
+        //         } else {
+        //             // break;
+        //         }
+        //     }
+        // }
     }   
+
+    while(P_i.solution.size() > MAX_POP_SIZE) {
+        P_i.solution.pop_back();
+    }
 
     // if (P_i.solution.size() < _pop_f2.solution.size() + _pop_f1.solution.size()) {
     //     for (int i = 0; i < _pop_f1.solution.size() + _pop_f2.solution.size() - P_i.solution.size(); i++) {
@@ -328,57 +345,141 @@ computation_msgs::RAD_VEGA_POPULATION crossAndMate(computation_msgs::RAD_VEGA_PO
     // }
     int crossCandidIdx_1 = 0;
     int crossCandidIdx_2 = 0;
-    while (idx < _inpop.solution.size() - 1) {
+    int mut_count = 0;
+    int MAX_MUT_COUNT = 300;
+    // std::cout << "----------_inpop.solution.size(): " << _inpop.solution.size() << std::endl;
+    // while (mut_count < MAX_MUT_COUNT) {
+    // std::cout << "------------1:_inpop.solution.size():" <<  _inpop.solution.size() << std::endl;
+
+    while (idx < MAX_MUT_COUNT) {
+        // std::cout << "------------1idx:" <<  idx << std::endl;
         computation_msgs::RAD_VEGA_SOLUTION _tmp_solution;
-        crossCandidIdx_1 = idx;
-        crossCandidIdx_2 = idx + 1;
-        // int crossCandidIdx_1 = RAND(_inpop.solution.size() - 1, 0);
-        // int crossCandidIdx_2 = RAND(_inpop.solution.size() - 1, 0);
-        // std::cout << "-----------------------1_in_f1: " << zdt1f1Objective(_inpop.solution[crossCandidIdx_1]) << ", 1_in_f2: " << zdt1f2Objective(_inpop.solution[crossCandidIdx_1]) << std::endl;
-        // std::cout << "-----------------------2_in_f1: " << zdt1f1Objective(_inpop.solution[crossCandidIdx_2]) << ", 2_in_f2: " << zdt1f2Objective(_inpop.solution[crossCandidIdx_2]) << std::endl;
-        // std::cout << "------ cross 2 _inpop.solution.size(): " << _inpop.solution.size() << std::endl;
-        // std::cout << "------ cross 2 crossCandidIdx_1: " << crossCandidIdx_1 << std::endl;
-        // std::cout << "------ cross 2 crossCandidIdx_2: " << crossCandidIdx_2 << std::endl;
-        AGAIN:
+        NEXT_CANDIDATE:
+        // std::cout << "------------2idx:" <<  idx << std::endl;
+        crossCandidIdx_1 = round((static_cast <float> (rand()) / static_cast <float> (RAND_MAX))*_inpop.solution.size());
+        crossCandidIdx_2 = round((static_cast <float> (rand()) / static_cast <float> (RAND_MAX))*_inpop.solution.size());
+        // std::cout << "------------3idx:" <<  idx << std::endl;
+        int _so_tmp = _inpop.solution.size() - 1;
+        crossCandidIdx_1 = std::min(crossCandidIdx_1,_so_tmp);
+        crossCandidIdx_2 = std::min(crossCandidIdx_2,_so_tmp);
         if (zdt1f1Objective(_inpop.solution[crossCandidIdx_1]) != zdt1f1Objective(_inpop.solution[crossCandidIdx_2])
         && zdt1f2Objective(_inpop.solution[crossCandidIdx_1]) != zdt1f2Objective(_inpop.solution[crossCandidIdx_2])) {
-            _tmp_solution.vehicleA = _inpop.solution[crossCandidIdx_1].vehicleB;
-            _tmp_solution.vehicleB = _inpop.solution[crossCandidIdx_2].vehicleA;
-            _outpop.solution.push_back(_tmp_solution);
-        } else {
-            crossCandidIdx_2 = crossCandidIdx_2 + 1;
-            if (crossCandidIdx_2 < _inpop.solution.size()) {
-                goto AGAIN;
+            _tmp_solution.vehicleA = _inpop.solution[crossCandidIdx_1].vehicleA;
+            _tmp_solution.vehicleB = _inpop.solution[crossCandidIdx_2].vehicleB;
+            // _tmp_solution = _inpop.solution[idx];
+            int new_childs_try_count = 0;
+            TRY_NEW_CHILDS:
+            // std::cout << "------------NEW CHILD idx:" <<  idx << std::endl;
+
+            // (new_childs_try_count == 10*_inpop.solution.size())
+            bool F1_P1 = false;
+            bool F1_P2 = false;
+            bool F2_P1 = false;
+            bool F2_P2 = false;
+            if (zdt1f1Objective(_tmp_solution) < zdt1f1Objective(_inpop.solution[crossCandidIdx_1])) {F1_P1 = true;}
+            if (zdt1f1Objective(_tmp_solution) < zdt1f1Objective(_inpop.solution[crossCandidIdx_2])) {F1_P2 = true;}
+            if (zdt1f2Objective(_tmp_solution) < zdt1f2Objective(_inpop.solution[crossCandidIdx_1])) {F2_P1 = true;}
+            if (zdt1f2Objective(_tmp_solution) < zdt1f2Objective(_inpop.solution[crossCandidIdx_2])) {F2_P2 = true;}
+
+            if (((F1_P1 || F2_P1) && (F1_P2 || F2_P2)) || (new_childs_try_count == 100*_inpop.solution.size())) {
+            // if ((F1_P1 && F2_P1) || (new_childs_try_count == 100*_inpop.solution.size())) {
+                _outpop.solution.push_back(_tmp_solution);
+                // std::cout << "------------new_childs_try_count:" << new_childs_try_count << std::endl;
+                // if (F1_P1) {std::cout << "------------F1_P1:" << idx << std::endl;}
+                // if (F2_P1) {std::cout << "------------F2_P1:" << idx << std::endl;}
+                // if (F1_P2) {std::cout << "------------F1_P2:" << idx << std::endl;}
+                // if (F2_P2) {std::cout << "------------F2_P2:" << idx << std::endl;}
+                if (new_childs_try_count != 100*_inpop.solution.size()) {
+                    // std::cout << "------------GOOD CHILD CREATED!!:" << std::endl;
+                } else {
+                    std::cout << "------------LAST SOLUTION ADDED!!:" <<  idx << std::endl;
+                }
+            } else {
+                // std::cout << "------------NEW CHILDS GENERATION!!:" <<  idx << std::endl;
+                // crossCandidIdx_2 = crossCandidIdx_2 + 1;
+                // if (crossCandidIdx_2 < _inpop.solution.size()) {
+                //    goto AGAIN;
+                // }
+                computation_msgs::RAD_VEGA_SOLUTION _tmp_sol;
+                autoware_msgs::Lane _tmp_lane;
+                _tmp_sol.vehicleA.lanes.push_back(_tmp_lane);
+                _tmp_sol.vehicleB.lanes.push_back(_tmp_lane);
+                float coef = 0;
+                coef = (static_cast <float> (rand()) / static_cast <float> (RAND_MAX));
+                for (auto wayPoint : _tmp_solution.vehicleA.lanes[0].waypoints) {
+                    // wayPoint.twist.twist.linear.x = 0.1*(RAND(10, 0));
+                    if (wayPoint.twist.twist.linear.x + coef > 1.0) {
+                        wayPoint.twist.twist.linear.x = coef*abs(wayPoint.twist.twist.linear.x - coef);
+                    } else {
+                        wayPoint.twist.twist.linear.x = wayPoint.twist.twist.linear.x + coef;
+                    }
+                    // std::cout << "------------1HERE, idx:" << idx << std::endl;
+                    // wayPoint.twist.twist.linear.x  = 0.5*wayPoint.twist.twist.linear.x; 
+                    // std::cout << "A x: " << wayPoint.twist.twist.linear.x << std::endl;
+                    // std::cout << "------------2HERE, wayPoint.twist.twist.linear.x:" << wayPoint.twist.twist.linear.x << std::endl;
+                    _tmp_sol.vehicleA.lanes[0].waypoints.push_back(wayPoint);
+                    // std::cout << "------------3HERE, idx:" << idx << std::endl;
+                }
+                _tmp_sol.vehicleA.lanes[0].waypoints[0].twist.twist.linear.x = coef;
+
+                coef = (static_cast <float> (rand()) / static_cast <float> (RAND_MAX));
+                for (auto wayPoint : _tmp_solution.vehicleB.lanes[0].waypoints) {
+                    // wayPoint.twist.twist.linear.x = 0.1*(RAND(10, 0));
+                    if (wayPoint.twist.twist.linear.x + coef > 1.0) {
+                        wayPoint.twist.twist.linear.x = coef*abs(wayPoint.twist.twist.linear.x - coef);
+                    } else {
+                        wayPoint.twist.twist.linear.x = wayPoint.twist.twist.linear.x + coef;
+                    }
+                    // wayPoint.twist.twist.linear.x = wayPoint.twist.twist.linear.x + (static_cast <float> (rand()) / static_cast <float> (RAND_MAX));
+                    // wayPoint.twist.twist.linear.x  = 0.5*wayPoint.twist.twist.linear.x; 
+                    // std::cout << "B x: " << wayPoint.twist.twist.linear.x << std::endl;
+                    _tmp_sol.vehicleB.lanes[0].waypoints.push_back(wayPoint);
+                }
+                _tmp_sol.vehicleB.lanes[0].waypoints[0].twist.twist.linear.x = coef;
+                _tmp_solution = _tmp_sol;
+                new_childs_try_count = new_childs_try_count + 1;
+                // std::cout << "------------not confirmed CHILD, idx:" << idx << std::endl;
+                // std::cout << "------------not confirmed CHILD _tmp_solution.solution.size:" << _tmp_solution.vehicleA.lanes[0].waypoints.size() << std::endl;
+                goto TRY_NEW_CHILDS;
             }
+        } else if (_inpop.solution.size() > 1)  {
+            // std::cout << "--------------------GOING TO NEXT CANDIDATE: " << idx << std::endl;
+            goto NEXT_CANDIDATE;
+        } else {
+            // std::cout << "--------------------SING SOL reminde!: " << idx << std::endl;
         }
         // std::cout << "------ cross 3 idx: " << idx << std::endl;
+        // std::cout << "------------2:_outpop.solution.size():" <<  _outpop.solution.size() << std::endl;
+
         // std::cout << "------ cross 4 idx" << idx << std::endl;
         // std::cout << "-----------------------out_f1: " << zdt1f1Objective(_tmp_solution) << ", out_f2: " << zdt1f2Objective(_tmp_solution) << std::endl;
         idx++;
     }
+    // std::cout << "3:_outpop.solution.size():" <<  _outpop.solution.size() << std::endl;
+    // }
 
-    while (_outpop.solution.size() < _inpop.solution.size()) {
-        computation_msgs::RAD_VEGA_SOLUTION _tmp_sol;
-        autoware_msgs::Lane _tmp_lane;
-        _tmp_sol.vehicleA.lanes.push_back(_tmp_lane);
-        _tmp_sol.vehicleB.lanes.push_back(_tmp_lane);
-        for (int i = 0; i < 15; i++) {
-            autoware_msgs::Waypoint _wp;
-            // wayPoint.twist.twist.linear.x = 0.1*(RAND(10, 0));
-            _wp.twist.twist.linear.x = static_cast <float> (rand()) / static_cast <float> (RAND_MAX);
-            // std::cout << "A x: " << wayPoint.twist.twist.linear.x << std::endl;
-            _tmp_sol.vehicleA.lanes[0].waypoints.push_back(_wp);
-        }
+    // while (_outpop.solution.size() < _inpop.solution.size()) {
+    //     computation_msgs::RAD_VEGA_SOLUTION _tmp_sol;
+    //     autoware_msgs::Lane _tmp_lane;
+    //     _tmp_sol.vehicleA.lanes.push_back(_tmp_lane);
+    //     _tmp_sol.vehicleB.lanes.push_back(_tmp_lane);
+    //     for (int i = 0; i < 15; i++) {
+    //         autoware_msgs::Waypoint _wp;
+    //         // wayPoint.twist.twist.linear.x = 0.1*(RAND(10, 0));
+    //         _wp.twist.twist.linear.x = static_cast <float> (rand()) / static_cast <float> (RAND_MAX);
+    //         // std::cout << "A x: " << wayPoint.twist.twist.linear.x << std::endl;
+    //         _tmp_sol.vehicleA.lanes[0].waypoints.push_back(_wp);
+    //     }
 
-        for (int i = 0; i < 15; i++) {
-            autoware_msgs::Waypoint _wp;
-            // wayPoint.twist.twist.linear.x = 0.1*(RAND(10, 0));
-            _wp.twist.twist.linear.x = static_cast <float> (rand()) / static_cast <float> (RAND_MAX);
-            // std::cout << "B x: " << wayPoint.twist.twist.linear.x << std::endl;
-            _tmp_sol.vehicleB.lanes[0].waypoints.push_back(_wp);
-        }
-        _outpop.solution.push_back(_tmp_sol);
-    }
+    //     for (int i = 0; i < 15; i++) {
+    //         autoware_msgs::Waypoint _wp;
+    //         // wayPoint.twist.twist.linear.x = 0.1*(RAND(10, 0));
+    //         _wp.twist.twist.linear.x = static_cast <float> (rand()) / static_cast <float> (RAND_MAX);
+    //         // std::cout << "B x: " << wayPoint.twist.twist.linear.x << std::endl;
+    //         _tmp_sol.vehicleB.lanes[0].waypoints.push_back(_wp);
+    //     }
+    //     _outpop.solution.push_back(_tmp_sol);
+    // }
     // std::cout << "------ _outpop.solution.size(): " << _outpop.solution.size() << std::endl;
     return _outpop;
 }
@@ -410,23 +511,25 @@ computation_msgs::RAD_VEGA_SOLUTION findBestSolution(computation_msgs::RAD_VEGA_
                 _last_pushed_sol = _pop.solution[i];
                 // std::cout << "----_pareto_frontier_set.solution.size(): " << _pareto_frontier_set.solution.size() << std::endl;
                 for (auto _sol : _pareto_frontier_set.solution) {
-                    // std::cout << "-----------------------1_sol_f1: " << zdt1f1Objective(_sol) << std::endl;
-                    // std::cout << "-----------------------1_sol_f2: " << zdt1f2Objective(_sol) << std::endl;
+                    //std::cout << "-----------------------1_sol_f1: " << zdt1f1Objective(_sol) << std::endl;
+                    //std::cout << "-----------------------1_sol_f2: " << zdt1f2Objective(_sol) << std::endl;
                 }
                 // _pop.solution.erase(_pop.solution.begin() + i);
             } else {
                 _pareto_frontier_set.solution.push_back(_pop.solution[i]);
                 _last_pushed_sol = _pop.solution[i];
                 // std::cout << "----_pareto_frontier_set.solution.size(): " << _pareto_frontier_set.solution.size() << std::endl;
-                for (auto _sol : _pareto_frontier_set.solution) {
-                    // std::cout << "-----------------------2_sol_f1: " << zdt1f1Objective(_sol) << std::endl;
-                    // std::cout << "-----------------------2_sol_f2: " << zdt1f2Objective(_sol) << std::endl;
-                }
+                
                 // std::cout << "-----------------------: " << std::endl;
                 // _pop.solution.erase(_pop.solution.begin() + i);
             }
         }
     }
+    for (auto _sol : _pareto_frontier_set.solution) {
+        std::cout << "f2: " << zdt1f2Objective(_sol) << std::endl;
+        std::cout << "f1: " << zdt1f1Objective(_sol) << std::endl;
+    }
+    std::cout << "pareto_set_size: " << _pareto_frontier_set.solution.size() << std::endl;
 
     if (_pareto_frontier_set.solution.size() > 1) {
         int idx = RAND(_pareto_frontier_set.solution.size() - 1, 0);
@@ -462,7 +565,7 @@ int main(int argc, char **argv)
 
     n.param<int>("/compute_model/FLOP_CALC_PERIOD_SEC", FLOP_CALC_PERIOD_SEC, 2);
     n.param<int>("/compute_model/LOOP_REPS", LOOP_REPS, 10000000);
-    n.param<int>("/compute_model/N_p", N_p, 1000);
+    n.param<int>("/compute_model/N_p", N_p, 200);
     n.param<int>("/compute_model/APPCO", APPCO, 10);
     n.param<float>("/compute_model/c_vp_a", c_vp_a, 0.1);
     n.param<float>("/compute_model/c_vp_b", c_vp_b, 0.1);
@@ -551,24 +654,27 @@ int main(int argc, char **argv)
             P_vehicleB.solution.clear();
             
             // std::cout << "-------P.size(): " << P.solution.size() << std::endl;
-            int GA_IT = 200;
+            int GA_IT = 500;
             for (int k = 0; k < GA_IT; k++) {
-                // std::cout << "-------k: " << k << std::endl;
+                // std::cout << "-------GENERATION: " << k << std::endl;
                 // std::cout << "-------1_f1: " <<  zdt1f1Objective(P.solution.at(0)) << "-------1_f2: " <<  zdt1f2Objective(P.solution.at(0)) << std::endl;
                 
                 // std::cout << "-------2_f1: " <<  zdt1f1Objective(P.solution.at(0)) << "-------2_f2: " <<  zdt1f2Objective(P.solution.at(0)) << std::endl;
                 // std::cout << "-------2: P.size(): " <<  P.solution.size() << std::endl;
                 propSelection(P);
+                if (P_i.solution.size() == 0) {
+                    break;
+                }
                 P = P_i;
+                // std::cout << "-------2.5: P.size(): " <<  P.solution.size() << std::endl;
                 P = crossAndMate(P);
                 
-                // if (P.solution.size() > 2) {
-                //     propSelection(P);
-                //     P = P_i;
-                // } else {
-                //     break;
-                // }
                 // std::cout << "-------3: P.size(): " <<  P.solution.size() << std::endl;
+                if (P.solution.size() == 0) {
+                    P = P_i;
+                    break;
+                }
+                
             }
 
             computation_msgs::RAD_VEGA_SOLUTION _sol = findBestSolution(P);
@@ -603,11 +709,13 @@ int main(int argc, char **argv)
                 _vega_stat.initial_path_pow_cost = zdt1f2Objective(_solution);
             }
             // std::cout << "------ AS parent. 4" << std::endl;
+            clock_t rl_end = clock();
+            double rl_time = difftime(rl_end, rl_start) / CLOCKS_PER_SEC;
+            std::cout << "-------EXE TIME: " <<  rl_time << std::endl;
+            std::cout << "-------TOTAL Initial POP: " <<  _vega_stat.total_solution_population_size << std::endl;
+            std::cout << "-------TOTAL Final POP: " <<  P.solution.size() << std::endl;
         }
-
-        clock_t rl_end = clock();
-        double rl_time = difftime(rl_end, rl_start) / CLOCKS_PER_SEC;
-        // std::cout << "-------EXE TIME: " <<  rl_time << std::endl;
+        
 
         status_pub.publish(_vega_status);
         vega_stat_pub.publish(_vega_stat);
