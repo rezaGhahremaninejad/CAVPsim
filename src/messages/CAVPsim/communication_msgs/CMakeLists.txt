@@ -28,7 +28,7 @@ generate_messages(
   std_msgs
   solver_msgs
   cav_vehicle_model_msgs
-  computation_msgs
+  # computation_msgs
   cooperative_msgs
   autoware_msgs
 )
