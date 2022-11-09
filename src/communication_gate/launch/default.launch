@@ -3,21 +3,13 @@
 
   <arg name="communication_namespace" default="vehicleA"/>
 
-  <node pkg="communication_gate" type="gate_node" name="gate_node" ns="$(arg communication_namespace)" output="screen">
-    <param name="L" value='2.7' />
-    <param name="m" value='1200' />
-    <param name="dt" value='0.001' />
-    <param name="R" value='0.19' />
-    <param name="I_d" value='0.3'/>
-    <param name="I_g" value='0.3' />
-    <param name="Im_e" value='0.3' />
-    <param name="Im_t" value='0.3' /> 
-    <param name="Im_w" value='0.3' /> 
-
-    <remap from="/computation/status" to="computation/status"/>
-    <remap from="/cav_vehicle_model/output" to="cav_vehicle_model/output"/>
-    <remap from="/lane_waypoints_array" to="/$(arg communication_namespace)/lane_waypoints_array"/>
-    <remap from="/computation/cooperation_status" to="/$(arg communication_namespace)/computation/cooperation_status"/>
+  <!-- <node pkg="communication_gate" type="gate_node" name="gate_node" ns="$(arg communication_namespace)" output="screen"> -->
+  <node pkg="communication_gate" type="gate_node" name="gate_node" ns="$(arg communication_namespace)" args="$(arg communication_namespace)" output="screen">
+    <remap from="/$(arg communication_namespace)/tx_com" to="/tx_com"/>
+    <!-- <remap from="/computation/status" to="computation/status"/> -->
+    <!-- <remap from="/cav_vehicle_model/output" to="cav_vehicle_model/output"/> -->
+    <!-- <remap from="/lane_waypoints_array" to="/$(arg communication_namespace)/lane_waypoints_array"/> -->
+    <!-- <remap from="/computation/cooperation_status" to="/$(arg communication_namespace)/computation/cooperation_status"/> -->
   </node>
 
   <!--<node pkg="cav_vehicle_model" type="model" name="model" ns="vehicleB" output="screen">
