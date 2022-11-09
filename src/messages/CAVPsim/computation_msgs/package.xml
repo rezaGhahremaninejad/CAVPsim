@@ -10,11 +10,13 @@
   <buildtool_depend>catkin</buildtool_depend>
 
   <build_depend>message_generation</build_depend>
+  <!-- <build_depend>communication_msgs</build_depend> -->
 
   <depend>std_msgs</depend>
   <depend>cav_vehicle_model_msgs</depend>
   <depend>solver_msgs</depend>
   <depend>autoware_msgs</depend>
+  <!-- <depend>communication_msgs</depend> -->
 
   <exec_depend>message_runtime</exec_depend>
 </package>
