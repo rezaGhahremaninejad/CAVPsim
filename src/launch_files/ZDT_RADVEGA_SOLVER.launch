@@ -5,6 +5,7 @@
   <arg name="dt" value="0.001"/>
   <arg name="_vehicleA_namespace" value="vehicleA"/>
   <arg name="_vehicleB_namespace" value="vehicleB"/>
+  <arg name="_vehicleC_namespace" value="vehicleC"/>
 
   <!-- <node type="cavpsim_gui" name="cavpsim_gui" pkg="cavpsim_gui" output="screen"/> -->
   <include file="$(find cavpsim_clock_server)/launch/default.launch"/> 
@@ -44,9 +45,11 @@
  <include file="$(find communication_gate)/launch/default.launch">
     <arg name="communication_namespace" value="$(arg _vehicleA_namespace)"/>
   </include> 
-
   <include file="$(find communication_gate)/launch/default.launch">
     <arg name="communication_namespace" value="$(arg _vehicleB_namespace)"/>
+  </include>
+  <include file="$(find communication_gate)/launch/default.launch">
+    <arg name="communication_namespace" value="$(arg _vehicleC_namespace)"/>
   </include> 
 
   <include file="$(find communication_model)/launch/default.launch">
@@ -54,24 +57,29 @@
   </include> 
   <include file="$(find communication_model)/launch/default.launch">
     <arg name="communication_namespace" value="$(arg _vehicleB_namespace)"/>
-  </include> 
+  </include>
+  <include file="$(find communication_model)/launch/default.launch">
+    <arg name="communication_namespace" value="$(arg _vehicleC_namespace)"/>
+  </include>  
 
   <include file="$(find solver)/launch/RAD_VEGA_ZDT.launch">
     <arg name="computation_namespace" value="$(arg _vehicleA_namespace)"/>
-    <arg name="rx_com_topic" value="/vehicleB/rx_com"/>
+    <!-- <arg name="rx_com_topic" value="/vehicleB/rx_com"/> -->
   </include> 
-
   <include file="$(find solver)/launch/RAD_VEGA_ZDT.launch">
     <arg name="computation_namespace" value="$(arg _vehicleB_namespace)"/>
-    <arg name="rx_com_topic" value="/vehicleA/rx_com"/>
+    <!-- <arg name="rx_com_topic" value="/vehicleA/rx_com"/> -->
   </include> 
+  <include file="$(find solver)/launch/RAD_VEGA_ZDT.launch">
+    <arg name="computation_namespace" value="$(arg _vehicleC_namespace)"/>
+    <!-- <arg name="rx_com_topic" value="/vehicleA/rx_com"/> -->
+  </include>
 
   <include file="$(find zdt_runner)/launch/default.launch" ns="$(arg _vehicleA_namespace)">
-    <!-- <arg name="planner_namespace" value="$(arg _vehicleA_namespace)"/> -->
   </include> 
-
   <include file="$(find zdt_runner)/launch/default.launch" ns="$(arg _vehicleB_namespace)">
-    <!-- <arg name="planner_namespace" value="$(arg _vehicleB_namespace)"/> -->
+  </include>
+  <include file="$(find zdt_runner)/launch/default.launch" ns="$(arg _vehicleC_namespace)">
   </include> 
 
   
