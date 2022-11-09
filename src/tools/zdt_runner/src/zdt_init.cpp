@@ -7,7 +7,7 @@
 #include <autoware_msgs/LaneArray.h>
 #include <autoware_msgs/Lane.h>
 // #include "../include/Timer.h"
-int POP_SIZE = 15;
+int POP_SIZE = 30;
 bool INIT = false;
 using namespace std;
 clock_t _time;
@@ -43,7 +43,7 @@ int main(int argc, char **argv)
         // if (laneArr_pub.getNumSubscribers() >= 1) {
         // std::cout << "sub check...." << std::endl;
         // ros::spin();
-        if (!INIT){
+        if (laneArr_pub.getNumSubscribers() > 0){
             // std::cout << "INIT check...." << std::endl;
             laneArr_pub.publish(_this_lane_arr);
             // INIT = true;
