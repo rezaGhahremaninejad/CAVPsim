@@ -24,7 +24,7 @@ namespace communication_model
     class itsg5_bristol : public nodelet::Nodelet
     {
     public:
-        itsg5_bristol() : BAND_WIDTH(6), MESSAGE_RATE(0.1), PROC_DELAY_MEAN_SEC(0), PROC_DELAY_DEV_SEC(0), idx(0) {}
+        itsg5_bristol() : BAND_WIDTH(6), MESSAGE_RATE(0.1), PROC_DELAY_MEAN_SEC(0), PROC_DELAY_DEV_SEC(0), idx(0), NS("UNKNOWN") {}
         ~itsg5_bristol() {}
 
         // ros::CallbackQueue &callback_queue = getMTCallbackQueue();
@@ -32,6 +32,7 @@ namespace communication_model
 
     private:
         float BAND_WIDTH, MESSAGE_RATE, PROC_DELAY_DEV_SEC, PROC_DELAY_MEAN_SEC;
+        string NS;
         int idx;
         ros::Subscriber tx_com_sub;
         ros::Publisher rx_com_pub;
@@ -42,8 +43,9 @@ namespace communication_model
         virtual void onInit()
         {
             ros::NodeHandle &private_nh = getPrivateNodeHandle();
-            rx_com_pub = private_nh.advertise<communication_msgs::ComMessage>("/rx_com", 1000);
-            tx_com_sub = private_nh.subscribe("/tx_com", 1000, &itsg5_bristol::comMessageCallback, this);
+            rx_com_pub = private_nh.advertise<communication_msgs::ComMessage>("/rx_com", 1);
+            tx_com_sub = private_nh.subscribe("/tx_com", 1, &itsg5_bristol::comMessageCallback, this);
+            private_nh.param<std::string>("NS", NS, "UNKNOWN");                             //wheelbase
         }
 
         // static void *msg_proc(void *threadid, float PROC_DELAY_MEAN_SEC,
@@ -224,6 +226,8 @@ namespace communication_model
             args.msg.msg_source = msg.msg_source;
             args.msg.participants_status = msg.participants_status;
             args.msg.header.stamp = ros::Time::now();
+            args.msg.msg_source = msg.msg_source;
+            // args.msg.computation_status = msg.computation_status;
             args.BAND_WIDTH = BAND_WIDTH;
             args.MESSAGE_RATE = MESSAGE_RATE;
             args.rx_com_pub = rx_com_pub;
