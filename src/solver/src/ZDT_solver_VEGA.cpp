@@ -31,7 +31,7 @@ int t_min = 1000; // Minimum time in msecond required a participant be available
 float LAST_FLOP_CALC_TIME;
 int LOOP_REPS = 1000;
 int N_p = 100;
-int APPCO = 10;
+float APPCO = 10.0;
 int MAX_POP_SIZE = 300;
 float c_vp_a, c_vp_b, c_ap_a, c_ap_b;
 bool LEADER_EXIST = false;
@@ -60,16 +60,16 @@ float zdt1f2Objective(const computation_msgs::RAD_VEGA_SOLUTION _sol)
 
 void printPopFitness(const computation_msgs::RAD_VEGA_POPULATION _pop, std::string _title) {
     std::cout << "--------Fitnes of " << _title << " with size: " << _pop.solution.size() << " ----" << std::endl;
+    std::cout << "--------------F1: " << std::endl;
     for (auto sol : _pop.solution) {
-        std::cout << "F1: " << zdt1f1Objective(sol) << std::endl;
+        std::cout << zdt1f1Objective(sol) << std::endl;
         // std::cout << "F2: " << zdt1f2Objective(sol) << std::endl;
         // std::cout << "--------------------------------------" << std::endl;
     }
 
+    std::cout << "--------------F2: " << std::endl;
     for (auto sol : _pop.solution) {
-        // std::cout << "F1: " << zdt1f1Objective(sol) << std::endl;
-        std::cout << "F2: " << zdt1f2Objective(sol) << std::endl;
-        // std::cout << "--------------------------------------" << std::endl;
+        std::cout << zdt1f2Objective(sol) << std::endl;
     }
     std::cout << "---------------END of pop fitness print for " << _title << "-------" << std::endl;
 }
@@ -87,33 +87,13 @@ computation_msgs::RAD_VEGA_POPULATION propSelection(computation_msgs::RAD_VEGA_P
     std::vector<float> _fitness_f1, _fitness_f2;
     computation_msgs::RAD_VEGA_POPULATION _pop_f1;
     computation_msgs::RAD_VEGA_POPULATION _pop_f2;
+    computation_msgs::RAD_VEGA_POPULATION _sorted_pop_f1, _sorted_pop_f2;
 
-    // initializing tmp vars:
-    float _total_fitness = 0;
-    float POP_PORP = 0.005;
-    MAX_POP_SIZE = _pop.solution.size();
-    if (_pop.solution.size() < 10) {
-        POP_PORP = 1.0;
-        MAX_POP_SIZE = 10*_pop.solution.size();
-    } else if (_pop.solution.size() < 50) {
-        POP_PORP = 0.1;
-        MAX_POP_SIZE = 5*_pop.solution.size();
-    } else if (_pop.solution.size() < 100) {
-        POP_PORP = 0.05;
-        MAX_POP_SIZE = 5*_pop.solution.size();
-    } else if (_pop.solution.size() < 200) {
-        POP_PORP = 0.05;
-        MAX_POP_SIZE = 10*_pop.solution.size();
-    } else if (_pop.solution.size() < 1000) {
-        POP_PORP = 0.02;
-        MAX_POP_SIZE = 20*_pop.solution.size();
-    } else if (_pop.solution.size() < 5000) {
-        POP_PORP = 0.01;
-        MAX_POP_SIZE = 50*_pop.solution.size();
-    }
-    float _tmp_min_fitness = 9999999;
-    float _last_tmp_min_fitness;
-    int _min_fitness_idx = 0;
+    int SELECTED_POP_SIZE, NUMBER_OF_COPIES;
+    // MAX_POP_SIZE = 0.9*_pop.solution.size();
+    SELECTED_POP_SIZE = 40;
+    if (_pop.solution.size() < SELECTED_POP_SIZE) {SELECTED_POP_SIZE = _pop.solution.size();} 
+
     for (int i = 0; i < _pop.solution.size(); i++)
     {
         if (i < _pop.solution.size() / 2)
@@ -127,90 +107,47 @@ computation_msgs::RAD_VEGA_POPULATION propSelection(computation_msgs::RAD_VEGA_P
             _pop_f2.solution.push_back(_pop.solution.at(i));
         }
     }
-
-    int IT_COUNT_f1 = _pop_f1.solution.size();
-    int IT_COUNT_f2 = _pop_f2.solution.size();
-    int REMAINING_f1 = IT_COUNT_f1;
-    int REMAINING_f2 = IT_COUNT_f2;
-    for (int it = 0; it < IT_COUNT_f1; it++)
-    {
-        _total_fitness = 0;
-        _tmp_min_fitness = 9999999;
-        _min_fitness_idx = 0;
-        for (int i = 0; i < _fitness_f1.size(); i++)
-        {
-            if (_fitness_f1[i] < _tmp_min_fitness)
-            {
-                _min_fitness_idx = i;
-                _tmp_min_fitness = _fitness_f1[i];
+    
+    for (int j = 0; j < SELECTED_POP_SIZE/2; j++) {
+        float fit_min = 99999.999;
+        int fit_min_idx = 0;
+        for (int i = 0; i < _fitness_f1.size(); i++) {
+            if (_fitness_f1[i] < fit_min) {
+                fit_min = _fitness_f1[i];
+                fit_min_idx = i;
             }
-            _total_fitness = _total_fitness + _fitness_f1[i];
         }
-
-        if (_tmp_min_fitness != _last_tmp_min_fitness)
-        {
-
-            int _number_of_copies = 0;
-            _number_of_copies = round(POP_PORP * REMAINING_f1);
-
-            for (int k = 0; k < _number_of_copies; k++)
-            {
-                _result.solution.push_back(_pop_f1.solution[_min_fitness_idx]);
-            }
-
-            REMAINING_f1 = IT_COUNT_f1 - it;
-        }
-
-        _fitness_f1.erase(_fitness_f1.begin() + _min_fitness_idx);
-        _pop_f1.solution.erase(_pop_f1.solution.begin() + _min_fitness_idx);
-        _last_tmp_min_fitness = _tmp_min_fitness;
+        _sorted_pop_f1.solution.push_back(_pop_f1.solution[fit_min_idx]);
+        _fitness_f1.erase(_fitness_f1.begin() + fit_min_idx);
     }
 
-    while (_result.solution.size() > MAX_POP_SIZE / 2)
-    {
-        _result.solution.pop_back();
-    }
-
-    _last_tmp_min_fitness = 0;
-    int _current_p_i_size = _result.solution.size();
-
-    for (int it = 0; it < IT_COUNT_f2; it++)
-    {
-        _total_fitness = 0;
-        _tmp_min_fitness = 9999999;
-        _min_fitness_idx = 0;
-        for (int i = 0; i < _fitness_f2.size(); i++)
-        {
-            if (_fitness_f2[i] < _tmp_min_fitness)
-            {
-                _min_fitness_idx = i;
-                _tmp_min_fitness = _fitness_f2[i];
+    for (int j = 0; j < SELECTED_POP_SIZE/2; j++) {
+        float fit_min = 99999.999;
+        int fit_min_idx = 0;
+        for (int i = 0; i < _fitness_f2.size(); i++) {
+            if (_fitness_f2[i] < fit_min) {
+                fit_min = _fitness_f2[i];
+                fit_min_idx = i;
             }
-            _total_fitness = _total_fitness + _fitness_f2[i];
         }
-
-        if (_tmp_min_fitness != _last_tmp_min_fitness)
-        {
-
-            int _number_of_copies = 0;
-            _number_of_copies = round(POP_PORP * REMAINING_f2);
-
-            for (int k = 0; k < _number_of_copies; k++)
-            {
-                _result.solution.push_back(_pop_f2.solution[_min_fitness_idx]);
-            }
-
-            REMAINING_f2 = IT_COUNT_f2 - it;
-        }
-        _fitness_f2.erase(_fitness_f2.begin() + _min_fitness_idx);
-        _pop_f2.solution.erase(_pop_f2.solution.begin() + _min_fitness_idx);
-        _last_tmp_min_fitness = _tmp_min_fitness;
+        _sorted_pop_f2.solution.push_back(_pop_f2.solution[fit_min_idx]);
+        _fitness_f2.erase(_fitness_f2.begin() + fit_min_idx);
     }
 
-    while (_result.solution.size() > MAX_POP_SIZE)
-    {
-        _result.solution.pop_back();
+    NUMBER_OF_COPIES = SELECTED_POP_SIZE;
+
+    for (int k = 0; k < _sorted_pop_f1.solution.size(); k++) {
+        for (int h = 0; h < NUMBER_OF_COPIES/2.0; h++) {
+            _result.solution.push_back(_sorted_pop_f1.solution[k]);
+            _result.solution.push_back(_sorted_pop_f2.solution[k]);
+        }
+        NUMBER_OF_COPIES = NUMBER_OF_COPIES - 1; 
     }
+
+    // while (_result.solution.size() > MAX_POP_SIZE)
+    // {
+    //     _result.solution.pop_back();
+    // }
     // if (NS == "vehicleA") {printPopFitness(_result, " Proportionated Selection output ");}
 
     return _result;
@@ -400,8 +337,19 @@ computation_msgs::RAD_VEGA_POPULATION crossAndMate(computation_msgs::RAD_VEGA_PO
     int idx = 0;
     int crossCandidIdx_1 = 0;
     int crossCandidIdx_2 = 0;
-    int new_child_try_max = 4*_inpop.solution.size();
-    int MAX_MUT_COUNT = _inpop.solution.size();
+    int new_child_try_max = 2*_inpop.solution.size();
+    int MAX_MUT_COUNT = 10*_inpop.solution.size();
+
+    // if (_inpop.solution.size() < 10) {
+    //     MAX_MUT_COUNT = 5*_inpop.solution.size();
+    // } else if (_inpop.solution.size() < 50) {
+    //     MAX_MUT_COUNT = 4*_inpop.solution.size();
+    // } else if (_inpop.solution.size() < 100) {
+    //     MAX_MUT_COUNT = 3*_inpop.solution.size();
+    // } else if (_inpop.solution.size() < 200) {
+    //     MAX_MUT_COUNT = 2*_inpop.solution.size();
+    // }
+    
     // printPopFitness(_inpop, " CrossOver and Mutation input ");
 
     while (idx < MAX_MUT_COUNT) {
@@ -420,14 +368,26 @@ computation_msgs::RAD_VEGA_POPULATION crossAndMate(computation_msgs::RAD_VEGA_PO
             for (int i = 0; i < _inpop.solution[crossCandidIdx_1].sol_set.at(0).lanes.at(0).waypoints.size()/2;i++) {
                 autoware_msgs::Waypoint _wp;
                 _wp = _inpop.solution[crossCandidIdx_1].sol_set.at(0).lanes.at(0).waypoints[i];
+                // if(_computation_status.IS_LEADER){std::cout << NS << ", child x: " << _wp.twist.twist.linear.x << std::endl;}
                 _lane.waypoints.push_back(_wp);
             }
 
             for (int i = (_inpop.solution[crossCandidIdx_1].sol_set.at(0).lanes.at(0).waypoints.size()/2); i < _inpop.solution[crossCandidIdx_1].sol_set.at(0).lanes.at(0).waypoints.size();i++) {
                 autoware_msgs::Waypoint _wp;
                 _wp = _inpop.solution[crossCandidIdx_2].sol_set.at(0).lanes.at(0).waypoints[i];
+                // if(_computation_status.IS_LEADER){std::cout << NS << ", child x: " << _wp.twist.twist.linear.x << std::endl;}
                 _lane.waypoints.push_back(_wp);
             }
+
+            // if(_computation_status.IS_LEADER) {
+            //     for (int i = 0; i < _inpop.solution[crossCandidIdx_1].sol_set[0].lanes[0].waypoints.size(); i++) {
+            //         std::cout << NS << ", parent 1 x: " << _inpop.solution[crossCandidIdx_1].sol_set[0].lanes[0].waypoints[i].twist.twist.linear.x << std::endl;
+            //     }
+
+            //     for (int i = 0; i < _inpop.solution[crossCandidIdx_2].sol_set[0].lanes[0].waypoints.size(); i++) {
+            //         std::cout << NS << ", parent 2 x: " << _inpop.solution[crossCandidIdx_2].sol_set[0].lanes[0].waypoints[i].twist.twist.linear.x << std::endl;
+            //     }
+            // }   
             _lane_arr.lanes.push_back(_lane);
             _tmp_solution.sol_set.push_back(_lane_arr);
             int new_childs_try_count = 0;
@@ -442,49 +402,23 @@ computation_msgs::RAD_VEGA_POPULATION crossAndMate(computation_msgs::RAD_VEGA_PO
             if (zdt1f2Objective(_tmp_solution) < zdt1f2Objective(_inpop.solution[crossCandidIdx_1])) {F2_P1 = true;}
             if (zdt1f2Objective(_tmp_solution) < zdt1f2Objective(_inpop.solution[crossCandidIdx_2])) {F2_P2 = true;}
             if ((F1_P1 || F2_P1) && (F1_P2 || F2_P2)) {
+            // if ((F1_P1 && F2_P1) && (F1_P2 && F2_P2)) {
             // if (F1_P1 || F1_P2 || F2_P1 || F2_P2) {
                 _outpop.solution.push_back(_tmp_solution);
-                if ((!F1_P1 || !F2_P1)) {
-                    _outpop.solution.push_back(_inpop.solution[crossCandidIdx_1]);
-                    idx++;
-                    if (_outpop.solution.size() > 10000) {idx = MAX_MUT_COUNT;}
-                }
-                if ((!F1_P2 || !F2_P2)) {
-                    _outpop.solution.push_back(_inpop.solution[crossCandidIdx_2]);
-                    idx++;
-                    if (_outpop.solution.size() > 10000) {idx = MAX_MUT_COUNT;}
-                }
-            // } else if (F1_P1 || F2_P1) {
-            // } else if (F2_P1 || F2_P2) {
-                // _outpop.solution.push_back(_tmp_solution);
-                // _outpop.solution.push_back(_inpop.solution[crossCandidIdx_2]);
-                // idx++;
-            // } else if (F1_P2 || F2_P2){
-            // } else if (F1_P2 || F2_P2){
-            //     _outpop.solution.push_back(_tmp_solution);
-            //     _outpop.solution.push_back(_inpop.solution[crossCandidIdx_1]);
-            //     idx++;
-            } else if (new_childs_try_count != new_child_try_max) {
+                // if(_computation_status.IS_LEADER){std::cout << NS << ", good child at: " << idx << std::endl;}
 
+            } else if (new_childs_try_count != new_child_try_max) {
                 float coef;
                 for (int i = 0; i < _tmp_solution.sol_set[0].lanes[0].waypoints.size(); i++) {
                     coef = (static_cast <float> (rand()) / static_cast <float> (RAND_MAX));
                     if (coef > 0.5) {
                         _tmp_solution.sol_set[0].lanes[0].waypoints[i].twist.twist.linear.x = 1.0 - _tmp_solution.sol_set[0].lanes[0].waypoints[i].twist.twist.linear.x;
                     }
-
-                    // if (coef > 0.5) {
-                    //     _tmp_solution.sol_set[0].lanes[0].waypoints[i].twist.twist.linear.x = 0.5*(coef
-                    //     + _tmp_solution.sol_set[0].lanes[0].waypoints[i].twist.twist.linear.x);
-                    // } else {
-                    //     _tmp_solution.sol_set[0].lanes[0].waypoints[i].twist.twist.linear.x = 
-                    //     abs(_tmp_solution.sol_set[0].lanes[0].waypoints[i].twist.twist.linear.x - coef)/2.0; 
-                    // }
-                    // if (_tmp_solution.sol_set[0].lanes[0].waypoints[i].twist.twist.linear.x>1){std::cout << "======BAD============BAD==========BAD" << std::endl;}
                 }
                 new_childs_try_count = new_childs_try_count + 1;
                 goto TRY_NEW_CHILDS;
             } else {
+                // if(_computation_status.IS_LEADER){std::cout << NS << ", parents at: " << idx << std::endl;}
                 _outpop.solution.push_back(_inpop.solution[crossCandidIdx_1]);
                 _outpop.solution.push_back(_inpop.solution[crossCandidIdx_2]);
                 idx++;
@@ -567,13 +501,13 @@ int main(int argc, char **argv)
 
     n.param<int>("/ZDT_solver_VEGA/FLOP_CALC_PERIOD_SEC", FLOP_CALC_PERIOD_SEC, 2);
     n.param<int>("/ZDT_solver_VEGA/LOOP_REPS", LOOP_REPS, 10000000);
-    n.param<int>("/ZDT_solver_VEGA/N_p", N_p, 2000);
-    n.param<int>("/ZDT_solver_VEGA/APPCO", APPCO, 1);
+    n.param<int>("/ZDT_solver_VEGA/N_p", N_p, 500);
+    n.param<float>("/ZDT_solver_VEGA/APPCO", APPCO, 0.0001);
     n.param<float>("/ZDT_solver_VEGA/c_vp_a", c_vp_a, 0.1);
     n.param<float>("/ZDT_solver_VEGA/c_vp_b", c_vp_b, 0.1);
     n.param<float>("/ZDT_solver_VEGA/c_ap_a", c_ap_a, 0.1);
     n.param<float>("/ZDT_solver_VEGA/c_ap_b", c_ap_b, 0.1);
-    n.param<int>("/ZDT_solver_VEGA/t_min", t_min, 2000);
+    n.param<int>("/ZDT_solver_VEGA/t_min", t_min, 10.0);
 
     status_pub = n.advertise<computation_msgs::status>("/computation/status", 1);
     vega_stat_pub = n.advertise<computation_msgs::VEGA_stat>("/computation/VEGA_stat", 1);
@@ -582,8 +516,8 @@ int main(int argc, char **argv)
     computation_sub = n.subscribe("/rx_com", 1, rxCallback);
     ego_path_sub = n.subscribe("/lane_waypoints_array", 1, egoPathCallback);
 
-    ros::Timer timer_FLOP_CALC = n.createTimer(ros::Duration(60.0), calcThisCAV_flp);
-    ros::Timer timer_EAT_CALC = n.createTimer(ros::Duration(60.0), calcThisCAV_t_available);
+    ros::Timer timer_FLOP_CALC = n.createTimer(ros::Duration(300.0), calcThisCAV_flp);
+    ros::Timer timer_EAT_CALC = n.createTimer(ros::Duration(300.0), calcThisCAV_t_available);
     ros::Timer timer_leader_selection = n.createTimer(ros::Duration(2.0), chooseLeader);
     ros::Timer timer_check_net_members = n.createTimer(ros::Duration(1.0), checkNetMembers);
     _computation_status.id = 1;
@@ -603,22 +537,50 @@ int main(int argc, char **argv)
         //     _others_P.solution.pop_back();
         // }
         if (_computation_status.CAV_total_flop != 0 && _computation_status.CAV_t_available != 0) {
-            _vega_stat.N_i = (N_p*_computation_status.CAV_flop*_computation_status.CAV_t_available) / (APPCO*_computation_status.CAV_total_flop*t_min);
-            int N_i = round(N_p*_computation_status.CAV_flop*_computation_status.CAV_t_available / (APPCO*_computation_status.CAV_total_flop*t_min));
-            if (P_i.solution.size() != 0) {
-                // std::cout << "-------initial P_i.solution.size(): " << P_i.solution.size() << std::endl;
-                for (int i = 0; i < N_i; i++) {
+            _vega_stat.N_i = N_p*_computation_status.CAV_flop*_computation_status.CAV_t_available*APPCO*t_min/_computation_status.CAV_total_flop;
+            int N_i = _vega_stat.N_i;
+            while (_others_P.solution.size() > N_i) {
+                _others_P.solution.pop_back();
+            }
+            // std::cout << "-------_computation_status.CAV_flop: " << _computation_status.CAV_flop << std::endl;
+            // std::cout << "-------_computation_status.CAV_t_available: " <<_computation_status.CAV_t_available << std::endl;
+            // std::cout << "-------APPCO: " <<APPCO << std::endl;
+            // std::cout << "-------t_min: " <<t_min << std::endl;
+            // std::cout << "-------down: " << _computation_status.CAV_total_flop << std::endl;
+            // std::cout << "-------N_i: " << N_i << std::endl;
+            // std::cout << "-------_vega_stat.N_i: " << _vega_stat.N_i << std::endl;
+            if (P_i.solution.size() == 1) {
+                for (int i = 0; i < N_i - _others_P.solution.size(); i++) {
                     computation_msgs::RAD_VEGA_SOLUTION _tmp_sol;
                     _tmp_sol = P_i.solution.at(0);
                     autoware_msgs::Lane _tmp_lane;
+                    // float _coef = static_cast <float> (rand()) / static_cast <float> (RAND_MAX);
+                    // if (_coef > 0.5) {   
+                    //     for (auto wayPoint : _tmp_sol.sol_set.at(0).lanes.at(0).waypoints) {
+                    //         wayPoint.twist.twist.linear.x = _coef*(static_cast <float> (rand()) / static_cast <float> (RAND_MAX));
+                    //         _tmp_lane.waypoints.push_back(wayPoint);
+                    //     }
+                    // } else {
+                    //     for (auto wayPoint : _tmp_sol.sol_set.at(0).lanes.at(0).waypoints) {
+                    //         wayPoint.twist.twist.linear.x = 1 - (_coef*(static_cast <float> (rand()) / static_cast <float> (RAND_MAX)));
+                    //         _tmp_lane.waypoints.push_back(wayPoint);
+                    //     }
+                    // }
                     for (auto wayPoint : _tmp_sol.sol_set.at(0).lanes.at(0).waypoints) {
-                        wayPoint.twist.twist.linear.x = static_cast <float> (rand()) / static_cast <float> (RAND_MAX);
-                        // std::cout << " wayPoint.twist.twist.linear.x: " <<  wayPoint.twist.twist.linear.x << std::endl;
+                        // float _coef = static_cast <float> (rand()) / static_cast <float> (RAND_MAX);
+                        // if (_coef < 0.333) {
+                            // wayPoint.twist.twist.linear.x = 1 - (_coef*(static_cast <float> (rand()) / static_cast <float> (RAND_MAX)));
+                        // } else if (_coef < 0.666){
+                        wayPoint.twist.twist.linear.x = (static_cast <float> (rand()) / static_cast <float> (RAND_MAX));
+                        // } else {
+                            // wayPoint.twist.twist.linear.x = _coef*(static_cast <float> (rand()) / static_cast <float> (RAND_MAX));
+                        // }
                         _tmp_lane.waypoints.push_back(wayPoint);
                     }
                     _tmp_sol.sol_set.at(0).lanes.at(0) = _tmp_lane;
                     P_i.solution.push_back(_tmp_sol);
                 }
+                // std::cout << "-------Final P_i.solution.size(): " << P_i.solution.size() << std::endl;
             }
             _vega_stat.NoOfAgents = _computation_status.net_member.size() + 1;
         }
@@ -626,18 +588,18 @@ int main(int argc, char **argv)
         int GA_IT = 10;
         if (_others_P.solution.size() == 0) {GA_IT = 1;}
 
-        if (P_i.solution.size() > 0) {
+        if (P_i.solution.size() > 1) {
             P_i.solution.insert(P_i.solution.end(), _others_P.solution.begin(), _others_P.solution.end());
             cout.setf(ios_base::fixed);
             clock_t rl_start = clock();
             computation_msgs::RAD_VEGA_POPULATION _tmp_pop;
             for (int k = 0; k < GA_IT; k++) {
                 // if(_computation_status.IS_LEADER){std::cout << NS << ", ------- GEN: " << k << std::endl;}
-                // if(_computation_status.IS_LEADER){std::cout << "------- P_i.solution.size(): " << P_i.solution.size() << std::endl;}
+                // if(_computation_status.IS_LEADER){std::cout  << NS << ", ------- GEN: " << k << ", P_i.solution.size(): " << P_i.solution.size() << std::endl;}
                 // if (_computation_status.IS_LEADER){printPopFitness(P_i, " P_i ");}
 
                 _tmp_pop = P_i;
-                P_i = propSelection(P_i);
+                P_i = crossAndMate(P_i);
                 // if(_computation_status.IS_LEADER){std::cout << "-------After propSel P_i.solution.size(): " << P_i.solution.size() << std::endl;}
                 // if (_computation_status.IS_LEADER){printPopFitness(P_i, " P_i after propSel");}
                 // std::cout << "------- Proportionate selection, P_i.solution.size(): " << P_i.solution.size() << std::endl;
@@ -647,7 +609,7 @@ int main(int argc, char **argv)
                     break;
                 }
                 _tmp_pop = P_i;
-                P_i = crossAndMate(P_i);
+                P_i = propSelection(P_i);
                 // if(_computation_status.IS_LEADER){std::cout << "-------After cross P_i.solution.size(): " << P_i.solution.size() << std::endl;}
                 if (P_i.solution.size() == 0) {
                     P_i = _tmp_pop;
@@ -661,8 +623,9 @@ int main(int argc, char **argv)
             computation_msgs::RAD_VEGA_POPULATION _pareto_set;
             P_i.solution.insert(P_i.solution.end(), _others_P.solution.begin(), _others_P.solution.end());
 
-            if(_computation_status.IS_LEADER){_pareto_set = findParetoSet(P_i, false);}
-            else {findParetoSet(P_i, false);}
+            // if(_computation_status.IS_LEADER){_pareto_set = findParetoSet(P_i, false);}
+            // else {findParetoSet(P_i, false);}
+            _pareto_set = findParetoSet(P_i, false);
             // if(_computation_status.IS_LEADER){std::cout << "---_others_P.solution.size(): " << _others_P.solution.size() << std::endl;}
             // if(_computation_status.IS_LEADER){std::cout << "---P_i.solution.size(): " << P_i.solution.size() << std::endl;}
             // if(_computation_status.IS_LEADER){std::cout << "---_pareto_set.solution.size(): " << _pareto_set.solution.size() << std::endl;}
@@ -670,7 +633,7 @@ int main(int argc, char **argv)
             // if(_computation_status.IS_LEADER){std::cout << "-------First findParetoSet END---------" << std::endl;}
             _computation_status.P = _pareto_set;
 
-            if (_computation_status.IS_LEADER && _others_P.solution.size() > 0) {
+            if (_computation_status.IS_LEADER) {
                 // computation_msgs::RAD_VEGA_POPULATION _final_pareto_set;
                 // _final_P = P_i;
                 // std::cout << "-----_FROM " << NS << ", THE ONLY LEADER-------------" << std::endl;
@@ -679,13 +642,17 @@ int main(int argc, char **argv)
                 // _final_P.solution.insert(_final_P.solution.end(), _others_P.solution.begin(), _others_P.solution.end());
                 // std::cout << "_final_P.size(): " << _final_P.solution.size() << std::endl;
                 // _final_pareto_set = findParetoSet(_final_P, true);
-                printPopFitness(_pareto_set, " From leader (" + NS + ") Pareto set: ");
+                if (_others_P.solution.size()>0){printPopFitness(_pareto_set, " From leader (" + NS + ") Pareto set: ");}
                 // _computation_status.P = _final_pareto_set;
                 computation_msgs::RAD_VEGA_SOLUTION _best_sol = findBestSolution(_pareto_set);
                 clock_t rl_end = clock();
                 double rl_time = difftime(rl_end, rl_start) / CLOCKS_PER_SEC;
-                std::cout << "-------EXE TIME: " <<  rl_time << std::endl;
-                std::cout << "-------Cooperative participant solutions: " <<  _others_P.solution.size() << std::endl;
+                std::cout << "From " << NS << "-------EXE TIME: " <<  rl_time << std::endl;
+                std::cout << "From " << NS << "-------_pareto_set.solution.size(): " <<  _pareto_set.solution.size() << std::endl;
+                std::cout << "From " << NS << "-------Cooperative participant solutions: " <<  _others_P.solution.size() << std::endl;
+                std::cout << "From " << NS << "-------local solutions: " << P_i.solution.size() - _others_P.solution.size() << std::endl;
+                std::cout << "From " << NS << "-------Total Generation iterrations: " << GA_IT << std::endl;
+                std::cout << "From " << NS << "-------SIM TIME: " <<  ros::Time::now() << std::endl;
                 // return 0;
             } else {
                 // std::cout << NS << " is not ready" << std::endl;
