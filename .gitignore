@@ -7,3 +7,5 @@ devel/
 **/.vscode/*
 .catkin_tools/
 *.pyc
+*.ods
+*.csv
