@@ -56,7 +56,7 @@
   <include file="$(find communication_gate)/launch/default.launch">
     <arg name="communication_namespace" value="$(arg _vehicleB_namespace)"/>
   </include>
-  <include file="$(find communication_gate)/launch/default.launch">
+  <!-- <include file="$(find communication_gate)/launch/default.launch">
     <arg name="communication_namespace" value="$(arg _vehicleC_namespace)"/>
   </include>
   <include file="$(find communication_gate)/launch/default.launch">
@@ -69,8 +69,20 @@
     <arg name="communication_namespace" value="$(arg _vehicleF_namespace)"/>
   </include> 
   <include file="$(find communication_gate)/launch/default.launch">
+    <arg name="communication_namespace" value="$(arg _vehicleG_namespace)"/>
+  </include> 
+  <include file="$(find communication_gate)/launch/default.launch">
+    <arg name="communication_namespace" value="$(arg _vehicleH_namespace)"/>
+  </include> 
+  <include file="$(find communication_gate)/launch/default.launch">
+    <arg name="communication_namespace" value="$(arg _vehicleI_namespace)"/>
+  </include> 
+  <include file="$(find communication_gate)/launch/default.launch">
     <arg name="communication_namespace" value="$(arg _vehicleJ_namespace)"/>
   </include> 
+  <include file="$(find communication_gate)/launch/default.launch">
+    <arg name="communication_namespace" value="$(arg _vehicleK_namespace)"/>
+  </include>  -->
 
   <include file="$(find communication_model)/launch/default.launch">
     <arg name="communication_namespace" value="$(arg _vehicleA_namespace)"/>
@@ -78,7 +90,7 @@
   <include file="$(find communication_model)/launch/default.launch">
     <arg name="communication_namespace" value="$(arg _vehicleB_namespace)"/>
   </include>
-  <include file="$(find communication_model)/launch/default.launch">
+  <!-- <include file="$(find communication_model)/launch/default.launch">
     <arg name="communication_namespace" value="$(arg _vehicleC_namespace)"/>
   </include>
   <include file="$(find communication_model)/launch/default.launch">
@@ -104,7 +116,7 @@
   </include>
   <include file="$(find communication_model)/launch/default.launch">
     <arg name="communication_namespace" value="$(arg _vehicleK_namespace)"/>
-  </include>
+  </include> -->
 
   <include file="$(find solver)/launch/RAD_VEGA_ZDT.launch">
     <arg name="computation_namespace" value="$(arg _vehicleA_namespace)"/>
@@ -112,7 +124,7 @@
   <include file="$(find solver)/launch/RAD_VEGA_ZDT.launch">
     <arg name="computation_namespace" value="$(arg _vehicleB_namespace)"/>
   </include> 
-  <include file="$(find solver)/launch/RAD_VEGA_ZDT.launch">
+  <!-- <include file="$(find solver)/launch/RAD_VEGA_ZDT.launch">
     <arg name="computation_namespace" value="$(arg _vehicleC_namespace)"/>
   </include>
   <include file="$(find solver)/launch/RAD_VEGA_ZDT.launch">
@@ -138,13 +150,13 @@
   </include>
   <include file="$(find solver)/launch/RAD_VEGA_ZDT.launch">
     <arg name="computation_namespace" value="$(arg _vehicleK_namespace)"/>
-  </include>
+  </include> -->
 
   <include file="$(find zdt_runner)/launch/default.launch" ns="$(arg _vehicleA_namespace)">
   </include> 
   <include file="$(find zdt_runner)/launch/default.launch" ns="$(arg _vehicleB_namespace)">
   </include>
-  <include file="$(find zdt_runner)/launch/default.launch" ns="$(arg _vehicleC_namespace)">
+  <!-- <include file="$(find zdt_runner)/launch/default.launch" ns="$(arg _vehicleC_namespace)">
   </include>
   <include file="$(find zdt_runner)/launch/default.launch" ns="$(arg _vehicleD_namespace)">
   </include>
@@ -161,7 +173,7 @@
   <include file="$(find zdt_runner)/launch/default.launch" ns="$(arg _vehicleJ_namespace)">
   </include>
   <include file="$(find zdt_runner)/launch/default.launch" ns="$(arg _vehicleK_namespace)">
-  </include> 
+  </include>  -->
 
   
   <!-- <include file="$(find map_file)/launch/points_map_loader.launch" ns="PCDLoader">
