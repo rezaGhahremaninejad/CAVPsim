@@ -8,6 +8,6 @@ float64 initial_path_col_cost
 float64 initial_path_pow_cost
 float64 corrected_path_col_cost
 float64 corrected_path_pow_cost
-int32 partner_solution_population_size
+int32 NoOfAgents
 int32 this_solution_population_size
 int32 total_solution_population_size
