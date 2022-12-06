@@ -208,6 +208,6 @@ include_directories(
 
 ## Add folders to be run by python nosetests
 # catkin_add_nosetests(test)
-add_executable(compute_model src/compute_model.cpp)
-target_link_libraries(compute_model ${catkin_LIBRARIES})
+# add_executable(compute_model src/compute_model.cpp)
+# target_link_libraries(compute_model ${catkin_LIBRARIES})
 #add_dependencies(radmsg_autoware_adapter sensor_msgs_generate_messages_cpp)
