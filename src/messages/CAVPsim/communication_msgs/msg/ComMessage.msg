@@ -1,7 +1,7 @@
 std_msgs/Header header
 string msg_source
 computation_msgs/status computation_status
-cav_vehicle_model_msgs/VehicleModelOutput cav_vehicle_model_out
+# cav_vehicle_model_msgs/VehicleModelOutput cav_vehicle_model_out
 autoware_msgs/LaneArray ego_path
-cooperative_msgs/status ego_status
-cooperative_msgs/status[] participants_status
+# cooperative_msgs/status ego_status
+# cooperative_msgs/status[] participants_status

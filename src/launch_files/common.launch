@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<launch>
+
+  <!-- COMMON ARGs -->
+  <arg name="dt" default="0.001"/>
+
+  <include file="$(find cavpsim_clock_server)/launch/default.launch"/> 
+
+</launch>

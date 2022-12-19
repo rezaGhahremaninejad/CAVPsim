@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<launch>
+
+  <!-- COMMON ARGs -->
+  <arg name="dt" default="0.001"/>
+  <arg name="vehicle_namespace"/>
+
+  <include file="$(find communication_gate)/launch/default.launch">
+    <arg name="communication_namespace" value="$(arg vehicle_namespace)"/>
+  </include> 
+  
+  <!-- <include file="$(find communication_model)/launch/default.launch">
+    <arg name="communication_namespace" value="$(arg vehicle_namespace)"/>
+  </include>  -->
+  
+  <include file="$(find solver)/launch/RAD_VEGA_ZDT.launch">
+    <arg name="computation_namespace" value="$(arg vehicle_namespace)"/>
+  </include> 
+  
+  <include file="$(find zdt_runner)/launch/default.launch" ns="$(arg vehicle_namespace)">
+  </include> 
+  
+</launch>
