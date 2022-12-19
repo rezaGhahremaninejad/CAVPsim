@@ -39,6 +39,8 @@ namespace communication_model
         ros::SubscribeOptions ops;
         pthread_t a_thread;
         communication_msgs::ComMessage _tx_com;
+        int total_ps = 0;
+
         // float TRANSMISSION_RATE_SECS = 0.02;
         virtual void onInit()
         {
@@ -273,8 +275,10 @@ namespace communication_model
                 // if (msg.ego_path.lanes.size() > 0 && msg.ego_path.lanes[0].waypoints.size() > 0) {
                 //     total_msg_size = total_msg_size + ((msg.ego_path.lanes[0].waypoints.size() - 1)*4*sizeof(msg.ego_path.lanes[0].waypoints[0].twist.twist.linear.x));
                 // }
-                // int ps = getPacketSize(msg);
-                // std::cout << msg.header.stamp << ", " << ps << std::endl;
+                int ps = getPacketSize(msg);
+                std::cout <<  msg.header.stamp << ", " << ps << std::endl;
+            } else {
+                // std::cout << "YUP" << std::endl;
             }
         }
     };
