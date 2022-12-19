@@ -78,7 +78,8 @@ int main(int argc, char **argv)
         ros::spinOnce();
         _tx_com.header.stamp = ros::Time::now();
         _tx_com.msg_source = NS;
-        if (getPacketSize(_tx_com) > 1200 && _tx_com.computation_status.P.solution.size() > 0) {
+        int ps = getPacketSize(_tx_com);
+        if (ps > 1200 && _tx_com.computation_status.P.solution.size() > 0) {
             communication_msgs::ComMessage _tmp_com_msg;
             _tmp_com_msg = _tx_com;
             size_t MAX_SIZE = 1;
@@ -95,8 +96,10 @@ int main(int argc, char **argv)
             _tx_com.computation_status.P.solution.erase(_tx_com.computation_status.P.solution.begin(), 
                 _tx_com.computation_status.P.solution.begin() + MAX_SIZE);
             // if (_tx_com.computation_status.P.solution.size())
+            // std::cout << ros::Time::now() << ", " << ps << std::endl;
         } else {
             tx_pub.publish(_tx_com);
+            // std::cout << ros::Time::now() << ", " << ps << std::endl;
         }
         loop_rate.sleep();
     }
