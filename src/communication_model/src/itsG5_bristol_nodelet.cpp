@@ -224,6 +224,7 @@ namespace communication_model
                     result = result + 4*SIZE_OF_POSITIOIN_INFO_IN_BYTES;
                 }
             }
+            // std::cout << "waypoints: " << result << std::endl;
             // std::cout << "eg_path: " << result << std::endl;
             for (auto sol : msg.computation_status.P.solution) {
                 for (auto sol_set : sol.sol_set) {
@@ -234,7 +235,16 @@ namespace communication_model
                     }
                 }
             }
-            // std::cout << "eg_path + solutions: " << result << std::endl;
+            // std::cout << "solutions+waypoint: " << result << std::endl;
+
+            // std::cout << "msg.header: " << sizeof(msg.header) << std::endl;
+            // std::cout << "msg.msg_source: " << sizeof(msg.msg_source) << std::endl;
+            // std::cout << "msg.ego_path.id: " << sizeof(msg.ego_path.id) << std::endl;
+            // std::cout << "msg.computation_status.CAV_flop: " << sizeof(msg.computation_status.CAV_flop) << std::endl;
+            // std::cout << "msg.computation_status.CAV_t_available: " << sizeof(msg.computation_status.CAV_t_available) << std::endl;
+            // std::cout << "msg.computation_status.header: " << sizeof(msg.computation_status.header) << std::endl;
+            // std::cout << "msg.computation_status.id: " << sizeof(msg.computation_status.id) << std::endl;
+            // std::cout << "msg.computation_status.IS_LEADER: " << sizeof(msg.computation_status.IS_LEADER) << std::endl;
             result = result
             + sizeof(msg.header)
             + sizeof(msg.msg_source)
@@ -276,7 +286,7 @@ namespace communication_model
                 //     total_msg_size = total_msg_size + ((msg.ego_path.lanes[0].waypoints.size() - 1)*4*sizeof(msg.ego_path.lanes[0].waypoints[0].twist.twist.linear.x));
                 // }
                 int ps = getPacketSize(msg);
-                std::cout <<  msg.header.stamp << ", " << ps << std::endl;
+                // std::cout <<  msg.header.stamp << ", " << ps << std::endl;
             } else {
                 // std::cout << "YUP" << std::endl;
             }
