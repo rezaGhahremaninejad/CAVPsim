@@ -19,7 +19,6 @@
 
 namespace GlobalPlanningNS
 {
-
 GlobalPlanner::GlobalPlanner()
 {
   m_pCurrGoal = 0;
@@ -29,14 +28,15 @@ GlobalPlanner::GlobalPlanner()
   m_GlobalPathID = 1;
   UtilityHNS::UtilityH::GetTickCount(m_ReplnningTimer);
 
-  nh.getParam("/op_global_planner/pathDensity" , m_params.pathDensity);
-  nh.getParam("/op_global_planner/enableSmoothing" , m_params.bEnableSmoothing);
-  nh.getParam("/op_global_planner/enableLaneChange" , m_params.bEnableLaneChange);
-  nh.getParam("/op_global_planner/enableRvizInput" , m_params.bEnableRvizInput);
-  nh.getParam("/op_global_planner/enableReplan" , m_params.bEnableReplanning);
-  nh.getParam("/op_global_planner/enableDynamicMapUpdate" , m_params.bEnableDynamicMapUpdate);
-  nh.getParam("/op_global_planner/mapFileName" , m_params.KmlMapPath);
-
+  nh.getParam("op_global_planner/pathDensity" , m_params.pathDensity);
+  nh.getParam("op_global_planner/enableSmoothing" , m_params.bEnableSmoothing);
+  nh.getParam("op_global_planner/enableLaneChange" , m_params.bEnableLaneChange);
+  nh.getParam("op_global_planner/enableRvizInput" , m_params.bEnableRvizInput);
+  nh.getParam("op_global_planner/enableReplan" , m_params.bEnableReplanning);
+  nh.getParam("op_global_planner/enableDynamicMapUpdate" , m_params.bEnableDynamicMapUpdate);
+  nh.getParam("op_global_planner/mapFileName" , m_params.KmlMapPath);
+  nh.getParam("op_global_planner/plannerNamespace" , m_params._ns);
+  // std::cout << m_params._ns << ": m_params.pathDensity:" << m_params.pathDensity << std::endl;
   int iSource = 0;
   nh.getParam("/op_global_planner/mapSource", iSource);
   if(iSource == 0)
@@ -281,8 +281,12 @@ void GlobalPlanner::VisualizeAndSend(const std::vector<std::vector<PlannerHNS::W
   PlannerHNS::ROSHelpers::createGlobalLaneArrayOrientationMarker(lane_array, pathsToVisualize);
   PlannerHNS::ROSHelpers::createGlobalLaneArrayVelocityMarker(lane_array, pathsToVisualize);
   pub_PathsRviz.publish(pathsToVisualize);
-  if((m_bFirstStart && m_params.bEnableHMI) || !m_params.bEnableHMI)
+  if((m_bFirstStart && m_params.bEnableHMI) || !m_params.bEnableHMI) {
+    std::string delimiter = "v_";
+    m_params._ns.erase(0, delimiter.length());
+    lane_array.id = std::stoi(m_params._ns);
     pub_Paths.publish(lane_array);
+  }
 
   for(unsigned int i=0; i < generatedTotalPaths.size(); i++)
   {
