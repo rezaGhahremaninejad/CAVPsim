@@ -1,0 +1,7 @@
+<?xml version="1.0"?>
+<launch>
+  <arg name="name_space" default="vehicleA"/>
+  <node pkg="sim_runner" type="cddp_init" name="cddp_init" ns="$(arg name_space)" output="screen" args="$(arg name_space)">
+    <remap from="/lane_waypoints_array" to="/$(arg name_space)/lane_waypoints_array"/>
+  </node>
+</launch>
