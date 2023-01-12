@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<launch>
+
+  <!-- COMMON ARGs -->
+  <arg name="dt" default="0.001"/>
+  <arg name="vehicle_namespace"/>
+
+  <include file="$(find communication_gate)/launch/default.launch">
+    <arg name="communication_namespace" value="$(arg vehicle_namespace)"/>
+  </include> 
+  
+  <include file="$(find sim_runner)/launch/cddp_init.launch">
+    <arg name="name_space" value="$(arg vehicle_namespace)"/>
+  </include> 
+
+  <include file="$(find op_global_planner)/launch/op_global_planner.launch">
+    <arg name="planner_namespace" value="$(arg vehicle_namespace)"/>
+    <!-- <remap from="/current_pose" to="$(arg vehicle_namespace)/current_pose"/>
+    <remap from="/current_velocity" to="$(arg vehicle_namespace)/current_velocity"/>
+    <remap from="/initialpose" to="$(arg vehicle_namespace)/initialpose"/> -->
+  </include>
+  
+  
+  
+  <include file="$(find solver)/launch/RAD_VEGA_PLANNING.launch">
+    <arg name="computation_namespace" value="$(arg vehicle_namespace)"/>
+  </include> 
+  
+  <!-- <include file="$(find sim_runner)/launch/default.launch" ns="$(arg vehicle_namespace)">
+  </include>  -->
+  
+</launch>

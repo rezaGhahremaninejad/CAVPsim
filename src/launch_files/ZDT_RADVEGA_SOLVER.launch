@@ -152,27 +152,27 @@
     <arg name="computation_namespace" value="$(arg _vehicleK_namespace)"/>
   </include> -->
 
-  <include file="$(find zdt_runner)/launch/default.launch" ns="$(arg _vehicleA_namespace)">
+  <include file="$(find sim_runner)/launch/default.launch" ns="$(arg _vehicleA_namespace)">
   </include> 
-  <include file="$(find zdt_runner)/launch/default.launch" ns="$(arg _vehicleB_namespace)">
+  <include file="$(find sim_runner)/launch/default.launch" ns="$(arg _vehicleB_namespace)">
   </include>
-  <!-- <include file="$(find zdt_runner)/launch/default.launch" ns="$(arg _vehicleC_namespace)">
+  <!-- <include file="$(find sim_runner)/launch/default.launch" ns="$(arg _vehicleC_namespace)">
   </include>
-  <include file="$(find zdt_runner)/launch/default.launch" ns="$(arg _vehicleD_namespace)">
+  <include file="$(find sim_runner)/launch/default.launch" ns="$(arg _vehicleD_namespace)">
   </include>
-  <include file="$(find zdt_runner)/launch/default.launch" ns="$(arg _vehicleE_namespace)">
+  <include file="$(find sim_runner)/launch/default.launch" ns="$(arg _vehicleE_namespace)">
   </include>
-  <include file="$(find zdt_runner)/launch/default.launch" ns="$(arg _vehicleF_namespace)">
+  <include file="$(find sim_runner)/launch/default.launch" ns="$(arg _vehicleF_namespace)">
   </include>
-  <include file="$(find zdt_runner)/launch/default.launch" ns="$(arg _vehicleG_namespace)">
+  <include file="$(find sim_runner)/launch/default.launch" ns="$(arg _vehicleG_namespace)">
   </include> 
-  <include file="$(find zdt_runner)/launch/default.launch" ns="$(arg _vehicleH_namespace)">
+  <include file="$(find sim_runner)/launch/default.launch" ns="$(arg _vehicleH_namespace)">
   </include>
-  <include file="$(find zdt_runner)/launch/default.launch" ns="$(arg _vehicleI_namespace)">
+  <include file="$(find sim_runner)/launch/default.launch" ns="$(arg _vehicleI_namespace)">
   </include>
-  <include file="$(find zdt_runner)/launch/default.launch" ns="$(arg _vehicleJ_namespace)">
+  <include file="$(find sim_runner)/launch/default.launch" ns="$(arg _vehicleJ_namespace)">
   </include>
-  <include file="$(find zdt_runner)/launch/default.launch" ns="$(arg _vehicleK_namespace)">
+  <include file="$(find sim_runner)/launch/default.launch" ns="$(arg _vehicleK_namespace)">
   </include>  -->
 
   

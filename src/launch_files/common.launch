@@ -5,5 +5,14 @@
   <arg name="dt" default="0.001"/>
 
   <include file="$(find cavpsim_clock_server)/launch/default.launch"/> 
+  <include file="$(find map_file)/launch/points_map_loader.launch" ns="PCDLoader">
+    <arg name="path_pcd" default='"$(env HOME)/CAVPsim/src/enviornment/map/PCD/test.pcd"' />
+  </include>
 
+  <include file="$(find map_file)/launch/vector_map_loader.launch">
+    <arg name="path_vector" default='$(env HOME)/CAVPsim/src/enviornment/map/vector/' />
+  </include>
+
+  <node type="static_transform_publisher" name="world_to_map" pkg="tf" output="screen" args="0 0 0 0 0 0 1 world map 10" />
+  <node type="static_transform_publisher" name="map_to_odom" pkg="tf" output="screen" args="0 0 0 0 0 0 1 map odom 10" />
 </launch>
