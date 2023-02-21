@@ -17,7 +17,7 @@
     <arg name="computation_namespace" value="$(arg vehicle_namespace)"/>
   </include> 
   
-  <include file="$(find zdt_runner)/launch/default.launch" ns="$(arg vehicle_namespace)">
+  <include file="$(find sim_runner)/launch/default.launch" ns="$(arg vehicle_namespace)">
   </include> 
   
 </launch>

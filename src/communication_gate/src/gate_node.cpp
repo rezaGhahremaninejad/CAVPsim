@@ -22,10 +22,20 @@ void compStatusCallback(const computation_msgs::status::ConstPtr &msg)
     // _tx_com.header.stamp = ros::Time::now();
     _tx_com.computation_status = *msg;
 }
+autoware_msgs::LaneArray downSampleLaneArr(const autoware_msgs::LaneArray msg) {
+    autoware_msgs::LaneArray _filtered;
+    autoware_msgs::Lane _tmp_lane;
+    for (int i = 0; i < msg.lanes[0].waypoints.size(); i++) {
+        if (i % 20 == 0){_tmp_lane.waypoints.push_back(msg.lanes[0].waypoints[i]);}
+    }
+    _filtered.id = msg.id;
+    _filtered.lanes.push_back(_tmp_lane);
+    return _filtered;
+}
 
 void egoPathCAllBack(const autoware_msgs::LaneArray::ConstPtr & msg) {
     // _tx_com.header.stamp = ros::Time::now();
-    _tx_com.ego_path = *msg;
+    _tx_com.ego_path = downSampleLaneArr(*msg);
 }
 
 // void coopStatusCallBack(const cooperative_msgs::status::ConstPtr & msg) {

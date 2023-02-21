@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <launch>
   <param name="/use_sim_time" value="true"/>
-  <node pkg="zdt_runner" type="zdt_init" name="zdt_init" output="screen">
+  <node pkg="sim_runner" type="zdt_init" name="zdt_init" output="screen">
       <!-- <remap from="atak/received_messages" to="vehicle/received_messages"/> -->
   </node>
   <!-- <rosparam param="itsg5_bristol" file="$(find communication_model)/communication_model.yaml"/> -->

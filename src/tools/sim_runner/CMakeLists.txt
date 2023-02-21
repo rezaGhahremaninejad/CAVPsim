@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 2.8.3)
-project(zdt_runner)
+project(sim_runner)
 
 ## Compile as C++11, supported in ROS Kinetic and newer
 # add_compile_options(-std=c++11)
@@ -11,6 +11,7 @@ find_package(catkin REQUIRED COMPONENTS
   roscpp
   communication_msgs
   computation_msgs
+  autoware_msgs
 )
 
 ## System dependencies are found with CMake's conventions
@@ -191,6 +192,8 @@ include_directories(
 #   target_link_libraries(${PROJECT_NAME}-test ${PROJECT_NAME})
 add_executable(zdt_init src/zdt_init.cpp)
 target_link_libraries(zdt_init ${catkin_LIBRARIES})
+add_executable(cddp_init src/cddp_init.cpp)
+target_link_libraries(cddp_init ${catkin_LIBRARIES})
 # endif()
 
 ## Add folders to be run by python nosetests

@@ -211,6 +211,8 @@ include_directories(
 # target_link_libraries(solver_VEGA ${catkin_LIBRARIES})
 add_executable(ZDT_solver_VEGA src/ZDT_solver_VEGA.cpp)
 target_link_libraries(ZDT_solver_VEGA ${catkin_LIBRARIES})
+add_executable(RAD_VEGA src/RAD_VEGA.cpp)
+target_link_libraries(RAD_VEGA ${catkin_LIBRARIES})
 # endif()
 
 ## Add folders to be run by python nosetests

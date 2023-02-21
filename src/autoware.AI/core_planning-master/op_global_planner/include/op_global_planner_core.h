@@ -62,6 +62,7 @@ namespace GlobalPlanningNS
 class WayPlannerParams
 {
 public:
+  std::string _ns;
   std::string KmlMapPath;
   bool bEnableSmoothing;
   bool bEnableLaneChange;
@@ -93,7 +94,6 @@ class GlobalPlanner
 public:
   int m_iCurrentGoalIndex;
 protected:
-
   WayPlannerParams m_params;
   PlannerHNS::WayPoint m_CurrentPose;
   std::vector<PlannerHNS::WayPoint> m_GoalsPos;

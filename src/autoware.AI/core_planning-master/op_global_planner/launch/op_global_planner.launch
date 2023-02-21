@@ -9,23 +9,27 @@
   <arg name="mapSource"             default="0" /> <!-- Autoware=0, Vector Map Folder=1, kml file=2 -->
   <arg name="mapFileName"           default="" /> <!-- incase of kml map source -->
   <arg name="enableDynamicMapUpdate"       default="false" />  
-  <arg name="planner_namespace"       default="vehicleA" />  
+  <arg name="planner_namespace" />  
   
 <node pkg="op_global_planner" type="op_global_planner" name="op_global_planner" output="screen" ns="$(arg planner_namespace)">
     
     <param name="pathDensity"         value="$(arg pathDensity)" />
-    <param name="enableSmoothing"       value="$(arg enableSmoothing)" />
+    <!-- <param name="enableSmoothing"       value="$(arg enableSmoothing)" />
     <param name="enableLaneChange"       value="$(arg enableLaneChange)" />
     <param name="enableRvizInput"       value="$(arg enableRvizInput)" />
     <param name="enableReplan"         value="$(arg enableReplan)" />        
     <param name="velocitySource"       value="$(arg velocitySource)" />
     <param name="mapSource"         value="$(arg mapSource)" />
-    <param name="mapFileName"         value="$(arg mapFileName)" />
+    <param name="mapFileName"         value="$(arg mapFileName)" /> -->
+    <param name="plannerNamespace"         value="$(arg planner_namespace)" />
     
     <param name="enableDynamicMapUpdate"   value="$(arg enableDynamicMapUpdate)" />
-    <remap from="/current_pose" to="/$(arg planner_namespace)/cav_vehicle_model/current_pose"/>
-    <remap from="/current_velocity" to="/$(arg planner_namespace)/cav_vehicle_model/current_velocity"/>
-    <remap from="/initialpose" to="/$(arg planner_namespace)/cav_vehicle_model/initialpose"/>
+    <remap from="/current_pose" to="/$(arg planner_namespace)/current_pose"/>
+    <remap from="/current_velocity" to="/$(arg planner_namespace)/current_velocity"/>
+    <remap from="/initialpose" to="/$(arg planner_namespace)/initialpose"/>
+    <!-- <remap from="/current_pose" to="/$(arg planner_namespace)/cav_vehicle_model/current_pose"/> -->
+    <!-- <remap from="/current_velocity" to="/$(arg planner_namespace)/cav_vehicle_model/current_velocity"/> -->
+    <!-- <remap from="/initialpose" to="/$(arg planner_namespace)/cav_vehicle_model/initialpose"/> -->
           
   </node> 
   
