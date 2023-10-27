@@ -223,9 +223,9 @@ float colObjective(const computation_msgs::RAD_VEGA_SOLUTION _sol)
                     // std::cout << "---T: " << T << std::endl;
                     D.push_back(assigneColRiskAtTime(sol1,sol2,T));
                 }
-                if (D.size() == 0) {std::cout << " ------------- HERE 1------" << std::endl;}
+                // if (D.size() == 0) {std::cout << " ------------- HERE 1------" << std::endl;}
                 float _D_sum = std::accumulate(D.begin(), D.end(), 0.0);
-                if (_D_sum == 0) {std::cout << " ------------- HERE 2------" << std::endl;}
+                // if (_D_sum == 0) {std::cout << " ------------- HERE 2------" << std::endl;}
                 D_sol.push_back(_D_sum);
             }
         }
@@ -248,7 +248,7 @@ float colObjective(const computation_msgs::RAD_VEGA_SOLUTION _sol)
     }
     H = std::accumulate(col_cost.begin(), col_cost.end(), 0.0);
     // if (H == 0) {std::cout << " ------------- HERE 4------" << std::endl;}
-    H = 10000.0;
+    // H = 10000.0;
 
     return H;
 }
@@ -404,10 +404,20 @@ void rxCallback(communication_msgs::ComMessage msg)
         
     }
     addToInitSol(msg.ego_path);
+
     if(msg.computation_status.P.solution.size()>0 && msg.msg_source != NS) {
-        _others_P.solution.insert(_others_P.solution.end(),
-                                  msg.computation_status.P.solution.begin(),
-                                  msg.computation_status.P.solution.end());
+        for(auto solution : msg.computation_status.P.solution) {
+            computation_msgs::RAD_VEGA_SOLUTION _tmp;
+            for (auto sol_set : _init_sol.sol_set) {
+                for (auto sol : solution.sol_set) {
+                    if (sol_set.lanes[0].waypoints.size() == sol.lanes[0].waypoints.size()) {
+                        _tmp.sol_set.push_back(sol);
+                        break;
+                    } 
+                }
+            }
+            _others_P.solution.push_back(_tmp);    
+        }
     }
 }
 
@@ -507,7 +517,7 @@ autoware_msgs::LaneArray downSampleLaneArr(const autoware_msgs::LaneArray msg) {
     autoware_msgs::LaneArray _filtered;
     autoware_msgs::Lane _tmp_lane;
     for (int i = 0; i < msg.lanes[0].waypoints.size(); i++) {
-        if (i % 20 == 0){_tmp_lane.waypoints.push_back(msg.lanes[0].waypoints[i]);}
+        if (i % 10 == 0){_tmp_lane.waypoints.push_back(msg.lanes[0].waypoints[i]);}
     }
     _filtered.id = msg.id;
     _filtered.lanes.push_back(_tmp_lane);
@@ -560,6 +570,7 @@ computation_msgs::RAD_VEGA_POPULATION findParetoSet(const computation_msgs::RAD_
     }
 
     if (_debug) {
+        std::cout << "_pareto_set.solution.size(): " << _pareto_set.solution.size() << std::endl; 
         // std::cout << "------------PARTEO SET, F1: ------------" << std::endl;
         // for (auto _sol: _pareto_set.solution) {
         //     std::cout << powObjective(_sol) << std::endl;
@@ -695,6 +706,7 @@ computation_msgs::RAD_VEGA_SOLUTION findBestSolution(computation_msgs::RAD_VEGA_
 }
 
 float Dg(const computation_msgs::RAD_VEGA_POPULATION _pop) {
+    if (_pop.solution.size() == 0){return 0;}
     float _result = 0;
     for (int i = 0; i < _pop.solution.size(); i++) {
         float _f1 = powObjective(_pop.solution[i]);
@@ -753,7 +765,6 @@ void printWaypoints(const computation_msgs::RAD_VEGA_SOLUTION _sol) {
     }
 }
 
-
 int main(int argc, char **argv)
 {
     ros::init(argc, argv, "ZDT_solver_VEGA");
@@ -798,6 +809,8 @@ int main(int argc, char **argv)
     while (ros::ok())
     {
         int N_i = 0;
+        // std::cout << NS << "--------**-HERE_:" <<  std::endl;
+
         if (_computation_status.CAV_flop != 0 && _computation_status.CAV_t_available != 0) {
             _vega_stat.N_i = N_p*_computation_status.CAV_flop*_computation_status.CAV_t_available*APPCO*t_min;
             // std::cout  << "---------_vega_stat.N_i: "<< _vega_stat.N_i << std::endl;
@@ -840,9 +853,10 @@ int main(int argc, char **argv)
             _vega_stat.NoOfAgents = _computation_status.net_member.size() + 1;
         }
         
-        for (auto sol : _init_sol.sol_set) {
-            // std::cout << NS << ", waypoints size: " << sol.lanes[0].waypoints.size() << std::endl;
-        }
+        // for (auto sol : _init_sol.sol_set) {
+        //     // std::cout << NS << ", waypoints size: " << sol.lanes[0].waypoints.size() << std::endl;
+        // }
+        // std::cout << NS << "--------0-HERE_:" <<  std::endl;
         
         int GA_IT = 20;
         // std::cout << "---------------------------------init_sol.sol_set.size(): " << _init_sol.sol_set.size() << std::endl;
@@ -869,9 +883,13 @@ int main(int argc, char **argv)
                 int set0_size = P_i.solution[0].sol_set[0].lanes[0].waypoints.size();
                 int set1_size = P_i.solution[0].sol_set[1].lanes[0].waypoints.size();
                 for (auto sol : P_i.solution) {
+                    // std::cout << "sol.sol_set.size(): " << sol.sol_set.size() << std::endl;
                     if (sol.sol_set[0].lanes[0].waypoints.size() != set0_size
-                    ||sol.sol_set[1].lanes[0].waypoints.size() != set1_size)
-                    {std::cout << "--------NOT COOL----------" << std::endl;}
+                    || sol.sol_set[1].lanes[0].waypoints.size() != set1_size)
+                    {
+                        std::cout << "set0_size: " << set0_size << "set0.size: " << sol.sol_set[0].lanes[0].waypoints.size() << std::endl;
+                        std::cout << "set1_size: " << set1_size << "set1.size: " << sol.sol_set[1].lanes[0].waypoints.size() << std::endl;
+                    } else {}
                 }
                 P_i = crossAndMate(P_i);
                 // std::cout << NS << "--------AFTER crossAndMate P_i.solution.size():" << P_i.solution.size() << std::endl;
@@ -899,6 +917,7 @@ int main(int argc, char **argv)
                     break;
                 }
             }
+            // std::cout << NS << "--------1-HERE_:" <<  std::endl;
             computation_msgs::RAD_VEGA_POPULATION _pareto_set;
             P_i.solution.insert(P_i.solution.end(), _others_P.solution.begin(), _others_P.solution.end());
             _pareto_set = findParetoSet(P_i, true);
@@ -921,6 +940,7 @@ int main(int argc, char **argv)
             // << colObjective(_init_sol)
             // << ", " << powObjective(_init_sol) 
             // << std::endl;
+            // std::cout << NS << "--------2-HERE_:" <<  std::endl;
             float powObj_init_sol = powObjective(_init_sol);
             float colObj_init_sol = colObjective(_init_sol);
             float powObjErr = 0.0; 
@@ -932,10 +952,10 @@ int main(int argc, char **argv)
             std::cout << ros::Time::now() 
             // << ", "  << rl_time*_computation_status.CAV_flop 
             // << ", " << rl_time 
-            << ", " << N_i 
-            << ", " << _others_P.solution.size() 
-            << ", " << powObj_init_sol
-            << ", " << colObj_init_sol
+            // << ", " << N_i 
+            // << ", " << _others_P.solution.size() 
+            // << ", " << powObj_init_sol
+            // << ", " << colObj_init_sol
             // << ", " << P_i.solution[0].sol_set.size() 
             // << ", " << powObjErr/_pareto_set.solution.size()  
             // << ", " << colObjErr/_pareto_set.solution.size()  
@@ -961,6 +981,7 @@ int main(int argc, char **argv)
                 // std::cout << NS << " is not ready" << std::endl;
             // }
 
+            // std::cout << NS << "--------3-HERE_:" <<  std::endl;
             P_i.solution.clear();
             P_i.solution.push_back(_init_sol);
             // _others_P.solution.clear();
