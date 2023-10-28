@@ -773,8 +773,8 @@ int main(int argc, char **argv)
 
     n.param<int>("/ZDT_solver_VEGA/FLOP_CALC_PERIOD_SEC", FLOP_CALC_PERIOD_SEC, 2);
     n.param<int>("/ZDT_solver_VEGA/LOOP_REPS", LOOP_REPS, 10000000);
-    n.param<int>("/ZDT_solver_VEGA/N_p", N_p, 1);
-    n.param<float>("/ZDT_solver_VEGA/APPCO", APPCO, 0.00025);
+    n.param<int>("/ZDT_solver_VEGA/N_p", N_p, 1.0);
+    n.param<float>("/ZDT_solver_VEGA/APPCO", APPCO, 0.0002);
     n.param<float>("/ZDT_solver_VEGA/c_vp_a", c_vp_a, 0.1);
     n.param<float>("/ZDT_solver_VEGA/c_vp_b", c_vp_b, 0.1);
     n.param<float>("/ZDT_solver_VEGA/c_ap_a", c_ap_a, 0.1);
@@ -974,7 +974,7 @@ int main(int argc, char **argv)
             // if (NS == "v_1") {
             // std::cout << ros::Time::now() << ", " << rl_time*_computation_status.CAV_flop << std::endl;
             // }
-            // std::cout << ros::Time::now() << ", " << NS << ", " << "N_sh: " <<  _others_P.solution.size() << std::endl;
+            std::cout << ros::Time::now() << ", " << NS << ", " << "N_sh: " <<  _others_P.solution.size() << std::endl;
             // std::cout << ros::Time::now() << ", " << NS << ", " <<  _others_P.solution.size() << std::endl;
                 // return 0;
             // } else {
