@@ -816,6 +816,7 @@ int main(int argc, char **argv)
             // std::cout  << "---------_vega_stat.N_i: "<< _vega_stat.N_i << std::endl;
             N_i = _vega_stat.N_i;
             _vega_stat.N_i = N_i;
+            if (N_i > 300){N_i = 300;}
             
             while (_others_P.solution.size() > N_i) {
                 ch = true;
