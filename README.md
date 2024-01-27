@@ -1,5 +1,5 @@
 # CAVPsim
-This repo contains source codes of CAVPsim a simulator for Connected Autonomous Vehicles Planning research scope <a id="1">[1]</a>. CAVPsim contains of three main component of vehicle motion model, communication application layer model and computation model. This repo also contains demo launch files and script to execute RAD-VEGA a Resource Aware and Distributed implementation of Vector Evaluated Genetic Algorithm as Multi-Objective Optimization Probmel (MOOP) solver which is modeled as speed profile optimizer.
+This repo contains source codes of CAVPsim a simulator for Connected Autonomous Vehicles Planning research scope <a id="1">[1]</a>. CAVPsim contains of three main component of vehicle motion model, communication application layer model and computation model. This repo also contains demo launch files and script to execute RAD-VEGA a Resource Aware and Distributed implementation of Vector Evaluated Genetic Algorithm as Multi-Objective Optimization Problem (MOOP) solver which is modeled as speed profile optimizer.
 This repo uses some of autoware.universe open source stack.  
 
 ## Build instructions
@@ -14,7 +14,7 @@ $ catkin config --extend /opt/ros/$ROS_DISTRO/
 $ catkin build -c -s
 ```
 ## Run demo scenarios for RAD-VEGA evaluation
-After sucessful build you can execute RAD-VEGA a solver implemented in CAVPsim to solve two set of sample problems. The first set is to run RAD-VEGA to solve ZDT1 MOOP test problem. The second set is distributed decision making problem for number of CAVs in a real HD map. To run ZDT1 test problem: 
+After successful build you can execute RAD-VEGA a solver implemented in CAVPsim to solve two set of sample problems. The first set is to run RAD-VEGA to solve ZDT1 MOOP test problem. The second set is distributed decision making problem for number of CAVs in a real HD map. To run ZDT1 test problem: 
 ```
 $ cd CAVPsim/src/launch_scripts/
 $ sudo chmod +x ZDT_RAD_VEGA_SOVLER.sh
